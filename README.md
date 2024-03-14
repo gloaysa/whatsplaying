@@ -2,6 +2,9 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+It uses:
+ - [zustand](https://github.com/pmndrs/zustand) for state management.
+
 ## Available Scripts
 
 In the project directory, you can run:
