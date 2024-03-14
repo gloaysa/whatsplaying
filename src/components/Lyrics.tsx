@@ -15,33 +15,46 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({
   const [previousLines, setPreviousLines] = useState<string[]>([]);
   const [upcomingLines, setUpcomingLines] = useState<string[]>([]);
 
+  // Function to set the current line and upcoming lines based on the given lyrics and current index
+  const setCurrentAndUpcomingLines = (lyrics: Lyrics, currentIndex: number) => {
+    const currentLineSpan = lyrics.Line[currentIndex]?.Span;
+    if (currentLineSpan && currentLineSpan.length > 0) {
+      setCurrentLine(currentLineSpan[0].text);
+    }
+    const nextLines = lyrics.Line.slice(
+      currentIndex + 1,
+      currentIndex + 11,
+    ).map((line) => line.Span?.[0]?.text);
+    setUpcomingLines(nextLines);
+  };
+
+  const setPreviousLinesFromIndex = (lyrics: Lyrics, currentIndex: number) => {
+    const prevLines = lyrics.Line.slice(
+      Math.max(0, currentIndex - 5),
+      currentIndex,
+    ).map((line) => line.Span?.[0]?.text);
+    setPreviousLines(prevLines);
+  };
+
   useEffect(() => {
-    setCurrentLine("");
+    // Effect hook to reset the lyrics when they change
+    setCurrentAndUpcomingLines(lyrics, 0);
     setPreviousLines([]);
-    setUpcomingLines([]);
   }, [lyrics]);
 
   useEffect(() => {
-    const currentTime = mediaPlayer.time;
+    // Effect hook to update the current line and previous lines based on the current time of the media player
+    const currentTime = Number(mediaPlayer.time) + 1000; // add a second to compensate for the delay
     const currentIndex = lyrics.Line.findIndex(
       (line) =>
         currentTime >= line.startOffset && currentTime <= line.endOffset,
     );
     if (currentIndex !== -1) {
-      const currentLineSpan = lyrics.Line[currentIndex]?.Span;
-      if (currentLineSpan && currentLineSpan.length > 0) {
-        setCurrentLine(currentLineSpan[0].text);
-      }
-      const prevLines = lyrics.Line.slice(
-        Math.max(0, currentIndex - 5),
-        currentIndex,
-      ).map((line) => line.Span?.[0]?.text);
-      const nextLines = lyrics.Line.slice(
-        currentIndex + 1,
-        currentIndex + 11,
-      ).map((line) => line.Span?.[0]?.text);
-      setPreviousLines(prevLines);
-      setUpcomingLines(nextLines);
+      setCurrentAndUpcomingLines(lyrics, currentIndex);
+
+      setPreviousLinesFromIndex(lyrics, currentIndex);
+    } else {
+      setCurrentLine("...");
     }
   }, [mediaPlayer.time, lyrics]);
 
@@ -62,17 +75,23 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({
         padding: "50px",
       }}
     >
-      <Container>
+      <Container
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          rowGap: "10px",
+        }}
+      >
         {previousLines.map((line, index) => (
-          <Typography key={index} style={{ color: "white" }} variant="h5">
+          <Typography key={index} style={{ color: "grey" }} variant="h5">
             {line}
           </Typography>
         ))}
-        <Typography style={{ color: "white" }} variant="h2">
+        <Typography style={{ color: "white" }} variant="h5">
           {currentLine}
         </Typography>
         {upcomingLines.map((line, index) => (
-          <Typography key={index} style={{ color: "white" }} variant="h5">
+          <Typography key={index} style={{ color: "grey" }} variant="h5">
             {line}
           </Typography>
         ))}

@@ -37,7 +37,7 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({
     getLyrics(plexamp).then((lyr) => {
       setLyrics(lyr);
     });
-  }, [getLyrics, plexamp, plexamp.containerKey]);
+  }, [getLyrics, plexamp.metadata?.playQueueItemID]);
 
   return (
     <div>
