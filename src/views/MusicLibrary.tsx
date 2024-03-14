@@ -1,24 +1,26 @@
 import React from "react";
-import { LibraryItem } from "../store/library.interface";
 import {
+  Box,
   CircularProgress,
   Container,
+  Grid,
   IconButton,
   Typography,
-  Box,
-  Grid,
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { Carousel } from "react-responsive-carousel";
 import { AlbumCover } from "../components/AlbumCover";
 import { useLocation } from "wouter";
+import { useLibraryStore, useMediaPlayerStore } from "../store/store";
 
-interface MusicLibraryProps {
-  library: LibraryItem[];
-}
-
-const MusicLibrary: React.FC<MusicLibraryProps> = ({ library }) => {
+const MusicLibrary: React.FC = () => {
+  const { library } = useLibraryStore((state) => state);
+  const { selectedMediaPlayer } = useMediaPlayerStore((state) => state);
   const [, setLocation] = useLocation();
+
+  if (!selectedMediaPlayer) {
+    setLocation("/");
+  }
 
   if (!library?.length) {
     return <CircularProgress />;

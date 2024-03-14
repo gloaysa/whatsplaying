@@ -20,11 +20,13 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({
     const currentLineSpan = lyrics.Line[currentIndex]?.Span;
     if (currentLineSpan && currentLineSpan.length > 0) {
       setCurrentLine(currentLineSpan[0].text);
+    } else {
+      setCurrentLine("...");
     }
     const nextLines = lyrics.Line.slice(
       currentIndex + 1,
       currentIndex + 11,
-    ).map((line) => line.Span?.[0]?.text);
+    ).map((line) => line.Span?.[0]?.text || "...");
     setUpcomingLines(nextLines);
   };
 
@@ -32,7 +34,7 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({
     const prevLines = lyrics.Line.slice(
       Math.max(0, currentIndex - 5),
       currentIndex,
-    ).map((line) => line.Span?.[0]?.text);
+    ).map((line) => line.Span?.[0]?.text || "...");
     setPreviousLines(prevLines);
   };
 
@@ -51,10 +53,7 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({
     );
     if (currentIndex !== -1) {
       setCurrentAndUpcomingLines(lyrics, currentIndex);
-
       setPreviousLinesFromIndex(lyrics, currentIndex);
-    } else {
-      setCurrentLine("...");
     }
   }, [mediaPlayer.time, lyrics]);
 

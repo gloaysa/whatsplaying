@@ -15,7 +15,9 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({
   plexamp,
   isSelected,
 }) => {
-  const { update, getLyrics } = useMediaPlayerStore((state) => state);
+  const { update, getLyrics, setSelectMediaPlayer } = useMediaPlayerStore(
+    (state) => state,
+  );
   useEffect(() => {}, [isSelected, plexamp, update]);
   const [lyrics, setLyrics] = useState<Lyrics | undefined>();
   const [showLyrics, setShowLyrics] = useState(false);
@@ -35,6 +37,12 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({
     const interval = setInterval(updateState, isSelected ? 1000 : 60000);
     return () => clearInterval(interval);
   }, [isSelected, update]);
+
+  useEffect(() => {
+    if (isSelected) {
+      setSelectMediaPlayer(plexamp);
+    }
+  }, [isSelected]);
 
   useEffect(() => {
     // when the media player changes, get the lyrics for the new media player

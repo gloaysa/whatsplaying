@@ -7,12 +7,8 @@ import { MediaPlayers } from "./views/MediaPlayers";
 import MusicLibrary from "./views/MusicLibrary";
 
 function App() {
-  const {
-    mediaPlayers,
-    selectedMediaPlayer,
-    getMediaPlayers,
-    setSelectMediaPlayer,
-  } = useMediaPlayerStore((state) => state);
+  const { mediaPlayers, selectedMediaPlayer, getMediaPlayers } =
+    useMediaPlayerStore((state) => state);
   const { library, getLibrary } = useLibraryStore((state) => state);
 
   useEffect(() => {
@@ -37,14 +33,11 @@ function App() {
         <Route path="/inbox" />
 
         <Route path="/albums">
-          <MusicLibrary library={library} />
+          <MusicLibrary />
         </Route>
 
         <Route path="/">
-          <MediaPlayers
-            mediaPlayers={mediaPlayers}
-            setSelectedMediaPlayer={setSelectMediaPlayer}
-          />
+          <MediaPlayers />
         </Route>
 
         {/* Default route in a switch */}

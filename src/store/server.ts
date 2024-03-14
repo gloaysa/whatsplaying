@@ -135,7 +135,7 @@ async function getClients(
   // iterate over the clients and do a fetch to get the client info, if fetch fails, remove the client from the array
   for (const client of clients) {
     const url = `${client.connections[0].uri}/resources`;
-    await fetch(url, {
+    await fetchWithTimeout(url, {
       headers: headers,
       method: "GET",
     }).catch(() => {
@@ -164,4 +164,34 @@ async function getClients(
     duration: 0,
     time: 0,
   }));
+}
+
+function fetchWithTimeout(
+  url: string,
+  options: RequestInit,
+  timeout = 5000,
+): Promise<Response> {
+  return new Promise((resolve, reject) => {
+    // Set up the timeout
+    const timer = setTimeout(() => {
+      reject(new Error("Request timed out"));
+    }, timeout);
+
+    // Fetch the resource
+    fetch(url, options)
+      .then((response) => {
+        // Clear the timeout
+        clearTimeout(timer);
+
+        // Resolve the fetch promise
+        resolve(response);
+      })
+      .catch((error) => {
+        // Clear the timeout
+        clearTimeout(timer);
+
+        // Reject the fetch promise
+        reject(error);
+      });
+  });
 }
