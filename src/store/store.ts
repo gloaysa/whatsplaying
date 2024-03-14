@@ -8,6 +8,8 @@ import {
   updateMediaPlayer,
 } from "./media_player";
 import { getMediaPlayers, getUser } from "./server";
+import { getLibrary } from "./library";
+import { LibraryState } from "./library.interface";
 
 interface UserStore {
   users: 0;
@@ -26,11 +28,27 @@ export const useUserStore = create<UserStore>((set) => ({
 
 let commandId = 0;
 
+export const useLibraryStore = create<LibraryState>((set, get) => ({
+  library: [],
+  getLibrary: async (player: MediaPlayer) => {
+    const library = await getLibrary(player);
+    set({ library });
+  },
+  // ... other methods
+}));
 export const useMediaPlayerStore = create<MediaPlayerState>((set, get) => ({
   mediaPlayers: [],
+  selectedMediaPlayer: undefined,
+  setSelectMediaPlayer: (player: MediaPlayer) => {
+    console.log("setSelectMediaPlayer", player?.name);
+    set({ selectedMediaPlayer: player });
+  },
   getMediaPlayers: async () => {
     const mediaPlayers = await getMediaPlayers();
     set({ mediaPlayers });
+    if (!get().selectedMediaPlayer && mediaPlayers.length) {
+      set({ selectedMediaPlayer: mediaPlayers[0] });
+    }
   },
   play: async (player: MediaPlayer): Promise<void> => {
     await sendPlayBackCommand(player, "play");
@@ -44,12 +62,23 @@ export const useMediaPlayerStore = create<MediaPlayerState>((set, get) => ({
     const updated = await updateMediaPlayer(player, commandId);
     commandId += 1;
     set({
-      mediaPlayers: get().mediaPlayers.map((media_player) => {
-        if (media_player.clientIdentifier === player.clientIdentifier) {
-          return updated;
-        }
-        return media_player;
-      }),
+      mediaPlayers: get()
+        .mediaPlayers.map((media_player) => {
+          if (media_player.clientIdentifier === player.clientIdentifier) {
+            return updated;
+          }
+          return media_player;
+        })
+        // sort by playing state
+        .sort((a, b) => {
+          if (a.state === "playing") {
+            return -1;
+          }
+          if (b.state === "playing") {
+            return 1;
+          }
+          return 0;
+        }),
     });
   },
   nextTrack: async (player: MediaPlayer): Promise<void> => {

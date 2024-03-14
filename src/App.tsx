@@ -1,47 +1,56 @@
 import React, { useEffect } from "react";
+import { Route, Switch } from "wouter";
 import "./App.css";
-import { useMediaPlayerStore } from "./store/store";
-import { CircularProgress } from "@mui/material";
-import { MediaCarousel } from "./components/Carousel.component";
+import { useLibraryStore, useMediaPlayerStore } from "./store/store";
+import { Box } from "@mui/material";
+import { MediaPlayers } from "./views/MediaPlayers";
+import MusicLibrary from "./views/MusicLibrary";
 
 function App() {
-  const { mediaPlayers, getMediaPlayers } = useMediaPlayerStore(
-    (state) => state,
-  );
+  const {
+    mediaPlayers,
+    selectedMediaPlayer,
+    getMediaPlayers,
+    setSelectMediaPlayer,
+  } = useMediaPlayerStore((state) => state);
+  const { library, getLibrary } = useLibraryStore((state) => state);
 
-  useEffect(() => {
-    // sorts the media players by state playing first
-    mediaPlayers.sort((a, b) => {
-      if (a.state === "playing") {
-        return -1;
-      }
-      if (b.state === "playing") {
-        return 1;
-      }
-      return 0;
-    });
-  }, [mediaPlayers]);
   useEffect(() => {
     if (!mediaPlayers?.length) {
       getMediaPlayers();
     }
   }, [mediaPlayers, getMediaPlayers]);
 
-  if (!mediaPlayers?.length) {
-    return <CircularProgress />;
-  }
+  useEffect(() => {
+    if (!library?.length && selectedMediaPlayer) {
+      getLibrary(selectedMediaPlayer);
+    }
+  }, [library, getLibrary, selectedMediaPlayer]);
 
   return (
-    <div
-      className="App"
-      style={{
+    <Box
+      sx={{
         backgroundColor: "black",
-        display: "flex",
-        justifyContent: "center",
       }}
     >
-      <MediaCarousel mediaPlayers={mediaPlayers} />
-    </div>
+      <Switch>
+        <Route path="/inbox" />
+
+        <Route path="/albums">
+          <MusicLibrary library={library} />
+        </Route>
+
+        <Route path="/">
+          <MediaPlayers
+            mediaPlayers={mediaPlayers}
+            setSelectedMediaPlayer={setSelectMediaPlayer}
+          />
+        </Route>
+
+        {/* Default route in a switch */}
+        <Route>404: No such page!</Route>
+      </Switch>
+    </Box>
   );
 }
 

@@ -7,17 +7,7 @@ import {
   MetadataWithChildren,
   Queue,
 } from "./media-player.type";
-
-export const mediaPlayerHeaders = (player: MediaPlayer) => ({
-  "X-Plex-Version": player.productVersion,
-  "X-Plex-Product": player.product,
-  "X-Plex-Target-Client-Identifier": player.clientIdentifier,
-  "X-Plex-Device-Name": player.name,
-  "X-Plex-Token": player.token,
-  "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
-  Accept: "application/json",
-  "X-Plex-Client-Identifier": "Plex-Client-Identifier",
-});
+import { mediaPlayerHeaders } from "./utils/getHeaders";
 
 export async function sendPlayBackCommand(
   mediaPlayer: MediaPlayer,
@@ -84,7 +74,7 @@ export async function updateMediaPlayer(
       }
       const thumbUrl = currentlyPlaying?.thumb;
       const thumbSize = "width=1080&height=1080";
-      const thumbParameters = `url=${thumbUrl}&quality=90&format=jpeg&X-Plex-Token=${mediaPlayer.token}`;
+      const thumbParameters = `url=${thumbUrl}&quality=90&format=png&X-Plex-Token=${mediaPlayer.token}`;
       mediaPlayer.metadata = {
         ...flattenMetadata(currentlyPlaying),
         thumb: `${mediaPlayer.server.uri}/photo/:/transcode?${thumbSize}&${thumbParameters}`,

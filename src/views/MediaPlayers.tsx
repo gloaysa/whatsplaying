@@ -1,19 +1,21 @@
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { MediaPlayer } from "../store/media-player.type";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
-import { MediaDisplay } from "./MediaDisplay";
+import { MediaDisplay } from "../components/MediaDisplay";
+import { CircularProgress } from "@mui/material";
 
 /**
  * Carousel component to display the media players.
  * Has arrows to navigate through the media players.
  * Takes the whole available width and height.
- * @param mediaPlayers
  */
-export const MediaCarousel = ({
+export const MediaPlayers = ({
   mediaPlayers,
+  setSelectedMediaPlayer,
 }: {
   mediaPlayers: MediaPlayer[];
+  setSelectedMediaPlayer: (player: MediaPlayer) => void;
 }) => {
   const customRenderItem = (
     item: any,
@@ -25,12 +27,18 @@ export const MediaCarousel = ({
       | undefined,
   ): ReactNode => <item.type {...item.props} {...options} />;
 
+  if (!mediaPlayers?.length) {
+    return <CircularProgress />;
+  }
+
   return (
     <Carousel
       showIndicators={false}
       showThumbs={false}
       renderItem={customRenderItem}
       className="presentation-mode"
+      onChange={(index) => setSelectedMediaPlayer(mediaPlayers[index])}
+      swipeable
     >
       {mediaPlayers.map((player) => (
         <MediaDisplay

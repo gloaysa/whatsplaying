@@ -57,16 +57,6 @@ export async function getMediaPlayers(): Promise<MediaPlayer[]> {
     [...clients, ...sonos]
       // sorts by name
       .sort((a, b) => a.name.localeCompare(b.name))
-      // sorts the media players by state playing first
-      .sort((a, b) => {
-        if (a.state === "playing") {
-          return -1;
-        }
-        if (b.state === "playing") {
-          return 1;
-        }
-        return 0;
-      })
   );
 }
 

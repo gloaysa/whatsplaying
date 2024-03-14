@@ -2,6 +2,8 @@ import { BaseMediaPlayerServer } from "./server.interface";
 
 export type MediaPlayerState = {
   mediaPlayers: MediaPlayer[];
+  selectedMediaPlayer: MediaPlayer | undefined;
+  setSelectMediaPlayer: (player: MediaPlayer) => void;
   getMediaPlayers: () => Promise<void>;
   play: (player: MediaPlayer) => Promise<void>;
   pause: (player: MediaPlayer) => Promise<void>;

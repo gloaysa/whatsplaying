@@ -9,13 +9,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Pause, PlayArrow, SkipNext, SkipPrevious } from "@mui/icons-material";
-import LyricsIcon from "@mui/icons-material/Lyrics";
 import { MediaPlayer } from "../store/media-player.type";
 import { useMediaPlayerStore } from "../store/store";
 
 interface IMediaControlsProps {
   plexamp: MediaPlayer;
-  showLyrics: () => void;
 }
 
 /**
@@ -23,7 +21,6 @@ interface IMediaControlsProps {
  */
 export const MediaControls: FunctionComponent<IMediaControlsProps> = ({
   plexamp,
-  showLyrics,
 }) => {
   const { play, pause, nextTrack, previousTrack, setVolumeLevel } =
     useMediaPlayerStore((state) => state);
@@ -103,14 +100,6 @@ export const MediaControls: FunctionComponent<IMediaControlsProps> = ({
               onClick={() => nextTrack(plexamp)}
             >
               <SkipNext />
-            </IconButton>
-
-            <IconButton
-              color="primary"
-              aria-label="show lyrics"
-              onClick={() => showLyrics()}
-            >
-              <LyricsIcon />
             </IconButton>
           </Box>
           <Box // volume control

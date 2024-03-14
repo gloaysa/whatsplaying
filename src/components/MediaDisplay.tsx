@@ -4,6 +4,8 @@ import { AlbumCover } from "./AlbumCover";
 import { MediaControls } from "./MediaControls";
 import { useMediaPlayerStore } from "../store/store";
 import LyricsDisplay from "./Lyrics";
+import { ExtraMediaControls } from "./ExtraMediaControls";
+import { useLocation } from "wouter";
 
 interface IMediaPlayerProps {
   plexamp: MediaPlayer;
@@ -17,6 +19,8 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({
   useEffect(() => {}, [isSelected, plexamp, update]);
   const [lyrics, setLyrics] = useState<Lyrics | undefined>();
   const [showLyrics, setShowLyrics] = useState(false);
+
+  const [, setLocation] = useLocation();
 
   /**
    * Function that updates the media player state the first time the component is mounted.
@@ -46,10 +50,11 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({
       )}
       <AlbumCover mediaUrl={plexamp.metadata?.thumb} />
       <div className="legend">
-        <MediaControls
-          plexamp={plexamp}
+        <ExtraMediaControls
           showLyrics={() => setShowLyrics(!showLyrics)}
+          showAlbums={() => setLocation("/albums")}
         />
+        <MediaControls plexamp={plexamp} />
       </div>
     </div>
   );

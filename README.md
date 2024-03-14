@@ -4,6 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 It uses:
  - [zustand](https://github.com/pmndrs/zustand) for state management.
+ - [wouter](https://github.com/molefrog/wouter) for routing.
 
 ## Available Scripts
 
