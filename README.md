@@ -69,7 +69,7 @@ services:
   plexart:
     container_name: plexart
     restart: unless-stopped
-    image: ghcr.io/gloaysa/plexart:latest
+    image: ghcr.io/gloaysa/plexart:main
     ports:
       - '5000:5000'
 ```
