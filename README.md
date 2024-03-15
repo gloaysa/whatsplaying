@@ -51,10 +51,16 @@ Once you have set the configuration, if you ever want to change it again, naviga
 ## Screenshots
 
 Player:
-![PlexArt](./player_example.png)
+![PlexArt](./example_player.png)
 
 Album Library:
-![PlexArt](./album_example.png)
+![PlexArt](./example_album.png)
+
+Displaying lyrics:
+![PlexArt](./example_lyrics.png)
+
+Displaying controls (mouse hovering over the album art or touching the screen):
+![PlexArt](./example_controls.png)
 
 ## Running with Docker Compose
 
@@ -75,11 +81,13 @@ services:
 ```
 
 ## Roadmap
-[] - Properly handle errors
-[] - Libraries are hardcoded (only the first one is shown)
-[] - Display playlists  
-[] - Add the ability to start albums/playlists  
-[] - Display art from external services (tidal)  
+[] - Properly handle errors.  
+[] - Libraries are hardcoded (only the first one is shown).  
+[] - Display playlists.  
+[] - Add the ability to start albums/playlists.  
+[] - Display art from external services (tidal).  
+[] - Allow configuration of Album library carousel time between slides.  
+[] - Allow configuration to autostart Album library if nothing is playing for x-amount of time.  
 
 ### Environment Variables
 
