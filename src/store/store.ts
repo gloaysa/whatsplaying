@@ -12,20 +12,32 @@ import { getLibrary } from "./library";
 import { LibraryState } from "./library.interface";
 import { devtools } from "zustand/middleware";
 
-interface UserStore {
-  users: 0;
+const config = {
+  PREFERRED_ORDER: localStorage.getItem("preferredOrder")?.split(",") ?? [],
+  HIDE_LIBRARIES: localStorage.getItem("hideLibraries")?.split(",") ?? [],
+  PLEX_TOKEN: localStorage.getItem("plexToken") ?? "",
+};
+
+interface UserStoreState {
+  users: number;
   user: PlexUser | undefined;
   getUser: () => Promise<void>;
+  configuration: {
+    plexToken: string;
+  };
 }
 
-export const useUserStore = create<UserStore>(
+export const useUserStore = create<UserStoreState>(
   devtools(
-    (set) => ({
+    (set, get: () => UserStoreState) => ({
       users: 0,
       user: undefined,
       getUser: async () => {
-        const user = await getUser();
+        const user = await getUser(get().configuration.plexToken);
         set({ user });
+      },
+      configuration: {
+        plexToken: config.PLEX_TOKEN ?? "",
       },
     }),
     { name: "UserStore" },
@@ -36,10 +48,20 @@ let commandId = 0;
 
 export const useLibraryStore = create<LibraryState>(
   devtools(
-    (set) => ({
+    (set, get: () => LibraryState) => ({
+      configuration: {
+        librariesToHide:
+          config.HIDE_LIBRARIES.map((device: string) =>
+            device.trim().toLowerCase(),
+          ) ?? [],
+        plexToken: config.PLEX_TOKEN,
+      },
       library: [],
       getLibrary: async (player: MediaPlayer) => {
-        const library = await getLibrary(player);
+        const library = await getLibrary(
+          player,
+          get().configuration.librariesToHide,
+        );
         set({ library });
       },
       // ... other methods
@@ -50,13 +72,22 @@ export const useLibraryStore = create<LibraryState>(
 export const useMediaPlayerStore = create<MediaPlayerState>(
   devtools(
     (set, get: () => MediaPlayerState) => ({
+      configuration: {
+        devicesOrder:
+          config.PREFERRED_ORDER.map((device: string) =>
+            device.trim().toLowerCase(),
+          ) ?? [],
+        plexToken: config.PLEX_TOKEN ?? "",
+      },
       mediaPlayers: [],
       selectedMediaPlayer: undefined,
       setSelectMediaPlayer: (player: MediaPlayer) => {
         set({ selectedMediaPlayer: player });
       },
       getMediaPlayers: async () => {
-        const mediaPlayers = await getMediaPlayers();
+        const mediaPlayers = await getMediaPlayers(
+          get().configuration.plexToken,
+        );
         set({ mediaPlayers });
       },
       play: async (player: MediaPlayer): Promise<void> => {
@@ -68,6 +99,7 @@ export const useMediaPlayerStore = create<MediaPlayerState>(
         await get().update(player);
       },
       update: async (player: MediaPlayer): Promise<void> => {
+        const devicesOrder = get().configuration.devicesOrder;
         const updated = await updateMediaPlayer(player, commandId);
         commandId += 1;
         set({
@@ -78,7 +110,21 @@ export const useMediaPlayerStore = create<MediaPlayerState>(
               }
               return media_player;
             })
-            // sort by playing state
+            // sort by device order
+            .sort((a, b) => {
+              const aIndex = devicesOrder.indexOf(a.name.trim().toLowerCase());
+              const bIndex = devicesOrder.indexOf(b.name.trim().toLowerCase());
+              if (aIndex === -1 && bIndex === -1) {
+                return 0;
+              }
+              if (aIndex === -1) {
+                return 1;
+              }
+              if (bIndex === -1) {
+                return -1;
+              }
+              return aIndex - bIndex;
+            }) // sort by playing state
             .sort((a, b) => {
               if (a.state === "playing") {
                 return -1;

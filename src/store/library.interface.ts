@@ -1,6 +1,10 @@
 import { MediaPlayer } from "./media-player.type";
 
 export type LibraryState = {
+  configuration: {
+    librariesToHide: string[];
+    plexToken: string;
+  };
   library: LibraryItem[];
   getLibrary: (player: MediaPlayer) => Promise<void>;
 };

@@ -4,6 +4,7 @@ import { MediaPlayer } from "./media-player.type";
 
 export const getLibrary = async (
   player: MediaPlayer,
+  librariesToHide: string[],
 ): Promise<LibraryItem[]> => {
   const response = await fetch(`${player.server.uri}/library/sections/`, {
     headers: mediaPlayerHeaders(player),
@@ -13,12 +14,13 @@ export const getLibrary = async (
   const musicLibrary = library.MediaContainer.Directory.filter(
     (directory) => directory.type === "artist",
   );
-  return getAlbums(player, musicLibrary);
+  return getAlbums(player, musicLibrary, librariesToHide);
 };
 
 const getAlbums = async (
   player: MediaPlayer,
   library: Library["MediaContainer"]["Directory"],
+  librariesToHide: string[],
 ): Promise<LibraryItem[]> => {
   const musicLibraries: LibraryItem[] = [];
   for (const libraryItem of library) {
@@ -30,8 +32,7 @@ const getAlbums = async (
     );
     const container = await response.json();
     const musicLibrary: LibraryItem = container.MediaContainer;
-    const librariesToHide = process.env.REACT_APP_HIDE_LIBRARY?.split(",");
-    if (!librariesToHide?.includes(musicLibrary.title1)) {
+    if (!librariesToHide?.includes(musicLibrary.title1.trim().toLowerCase())) {
       const metadata = musicLibrary.Metadata.map((album) => {
         const thumbUrl = album?.thumb;
         const thumbSize = "width=1080&height=1080";

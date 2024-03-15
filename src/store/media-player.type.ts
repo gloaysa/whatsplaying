@@ -1,6 +1,10 @@
 import { BaseMediaPlayerServer } from "./server.interface";
 
 export type MediaPlayerState = {
+  configuration: {
+    devicesOrder: string[];
+    plexToken: string;
+  };
   mediaPlayers: MediaPlayer[];
   selectedMediaPlayer: MediaPlayer | undefined;
   setSelectMediaPlayer: (player: MediaPlayer) => void;

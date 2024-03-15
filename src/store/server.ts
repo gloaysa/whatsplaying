@@ -8,9 +8,7 @@ import {
 } from "./server.interface";
 import { MediaPlayer } from "./media-player.type";
 
-const token = process.env.REACT_APP_PLEX_TOKEN ?? "";
-
-const headers = {
+const getHeaders = (token: string) => ({
   "X-Plex-Version": "1.0",
   "X-Plex-Product": "Plex-Product",
   "X-Plex-Client-Identifier": "Plex-Client-Identifier",
@@ -22,11 +20,11 @@ const headers = {
   "X-Plex-Token": token,
   "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
   Accept: "application/json",
-};
+});
 
-export async function getUser(): Promise<PlexUser> {
+export async function getUser(token: string): Promise<PlexUser> {
   const response = await fetch("https://plex.tv/api/v2/user", {
-    headers: headers,
+    headers: getHeaders(token),
     method: "GET",
   });
   if (response.status === 401) {
@@ -40,24 +38,30 @@ export async function getUser(): Promise<PlexUser> {
  * It fetches the resources from the plex.tv API and filters the clients and sonos resources.
  * @returns An array of media players sorted by name and state.
  */
-export async function getMediaPlayers(): Promise<MediaPlayer[]> {
-  const response = await fetch(`https://plex.tv/api/v2/resources`, {
-    headers: headers,
-    method: "GET",
-  });
-  const resources = await response.json();
-  const server = getServerInfo(resources);
-  if (!server) {
-    return [];
-  }
-  const clients = await getClients(resources, server);
-  const sonos = await getSonosResource(server);
+export async function getMediaPlayers(token: string): Promise<MediaPlayer[]> {
+  try {
+    const response = await fetch(`https://plex.tv/api/v2/resources`, {
+      headers: getHeaders(token),
+      method: "GET",
+    });
+    const resources = await response.json();
+    const server = getServerInfo(resources);
+    if (!server) {
+      return [];
+    }
+    const clients = await getClients(resources, server, token);
+    const sonos = await getSonosResource(server, token);
 
-  return (
-    [...clients, ...sonos]
-      // sorts by name
-      .sort((a, b) => a.name.localeCompare(b.name))
-  );
+    return (
+      [...clients, ...sonos]
+        // sorts by name
+        .sort((a, b) => a.name.localeCompare(b.name))
+    );
+  } catch (error) {
+    throw new Error(
+      "Error fetching media players, are you providing the plex token?",
+    );
+  }
 }
 
 /**
@@ -67,9 +71,10 @@ export async function getMediaPlayers(): Promise<MediaPlayer[]> {
  */
 async function getSonosResource(
   server: BaseMediaPlayerServer,
+  token: string,
 ): Promise<MediaPlayer[]> {
   const response = await fetch(`https://sonos.plex.tv/resources`, {
-    headers: headers,
+    headers: getHeaders(token),
     method: "GET",
   });
   const data = await response.text();
@@ -120,12 +125,11 @@ function getServerInfo(
 /**
  * Function that gets the clients from the resources, filtering out the clients that are not available.
  * @returns An array of media players.
- * @param resources
- * @param server
  */
 async function getClients(
   resources: PlexResource[],
   server: BaseMediaPlayerServer,
+  token: string,
 ): Promise<MediaPlayer[]> {
   // should find all the resources that are not the server, returning an array
   const clients = resources.filter((resource) =>
@@ -136,7 +140,7 @@ async function getClients(
   for (const client of clients) {
     const url = `${client.connections[0].uri}/resources`;
     await fetchWithTimeout(url, {
-      headers: headers,
+      headers: getHeaders(token),
       method: "GET",
     }).catch(() => {
       clients.splice(clients.indexOf(client), 1);

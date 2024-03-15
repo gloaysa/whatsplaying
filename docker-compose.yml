@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  plexart:
+    container_name: plexart
+    restart: unless-stopped
+    build: .
+    ports:
+      - '5000:5000'

@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
 import { Route, Switch } from "wouter";
 import "./App.css";
-import { useLibraryStore, useMediaPlayerStore } from "./store/store";
+import {
+  useLibraryStore,
+  useMediaPlayerStore,
+  useUserStore,
+} from "./store/store";
 import { Box } from "@mui/material";
 import { MediaPlayers } from "./views/MediaPlayers";
 import MusicLibrary from "./views/MusicLibrary";
@@ -24,11 +28,7 @@ function App() {
   }, [library, getLibrary, selectedMediaPlayer]);
 
   return (
-    <Box
-      sx={{
-        backgroundColor: "black",
-      }}
-    >
+    <Box>
       <Switch>
         <Route path="/inbox" />
 
