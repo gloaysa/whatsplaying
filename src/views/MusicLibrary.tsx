@@ -1,17 +1,11 @@
 import React from "react";
-import {
-  Box,
-  CircularProgress,
-  Container,
-  Grid,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Grid, IconButton, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { Carousel } from "react-responsive-carousel";
 import { AlbumCover } from "../components/AlbumCover";
 import { useLocation } from "wouter";
 import { useLibraryStore, useMediaPlayerStore } from "../store/store";
+import { Spinner } from "../components/Spinner";
 
 const MusicLibrary: React.FC = () => {
   const { library } = useLibraryStore((state) => state);
@@ -23,11 +17,11 @@ const MusicLibrary: React.FC = () => {
   }
 
   if (!library?.length) {
-    return <CircularProgress />;
+    return <Spinner open />;
   }
 
   return (
-    <Box>
+    <Box sx={{ backgroundColor: "black" }}>
       <Carousel
         showThumbs={false}
         showIndicators={false}

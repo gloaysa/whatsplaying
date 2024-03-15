@@ -2,8 +2,8 @@ import React, { FunctionComponent, ReactNode } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import { MediaDisplay } from "../components/MediaDisplay";
-import { CircularProgress } from "@mui/material";
 import { useMediaPlayerStore } from "../store/store";
+import { Spinner } from "../components/Spinner";
 
 /**
  * Carousel component to display the media players.
@@ -23,7 +23,7 @@ export const MediaPlayers: FunctionComponent = () => {
   ): ReactNode => <item.type {...item.props} {...options} />;
 
   if (!mediaPlayers?.length) {
-    return <CircularProgress />;
+    return <Spinner open />;
   }
 
   return (

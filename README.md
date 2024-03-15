@@ -1,6 +1,9 @@
-# PlexArt Display
 
-![PlexArt Display](./plexart.png)
+<img align="right" width="33%" src="./logo.png"> 
+<h1>PlexArt Display</h1>
+
+
+
 
 Welcome to PlexArt Display, a web application that brings your music to life. This project is all about showcasing your currently playing album art in a visually appealing way, turning your browser into a vibrant music hub.
 
@@ -29,20 +32,29 @@ The carousel auto-plays, changing slides every few seconds. The albums are chose
 
 ## Configurations
 
-PlexArt Display can be customized to suit your needs by setting environment variables in your `.env` file. Here's a brief explanation of each one:
+PlexArt Display can be customized to suit your needs by setting configurations.
+The first time you run the application, you will be prompted to enter your Plex token and other configurations.
 
-- `REACT_APP_PLEX_TOKEN`: MANDATORY. This is your Plex token. It's used to authenticate with your Plex server. 
+- `PLEX_TOKEN`: MANDATORY. This is your Plex token. It's used to authenticate with your Plex server. 
 You can find it by following this [guide](https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/).
 
-- `REACT_APP_HIDE_LIBRARY`: OPTIONAL. This is a comma-separated list of library sections you want to hide.
-For example, if you have libraries named "Music" and "Podcasts" and you want to hide the "Podcasts" library, you would set this variable to `Podcasts`.
+- `HIDE_LIBRARY`: OPTIONAL. This is a comma-separated list of library sections you want to hide.
+For example, if you have libraries named "Music" and "Podcasts" and you want to hide the "Podcasts" library.
 
-- `REACT_APP_PREFER_ORDER`: OPTIONAL. This is a comma-separated list of device names in the order you prefer them to be displayed.
+- `PREFER_ORDER`: OPTIONAL. This is a comma-separated list of device names in the order you prefer them to be displayed.
 For example, if you have devices named "Living Room", "Bedroom", and "Kitchen" and you want them to be displayed in that order,
-you would set this variable to `Living Room,Bedroom,Kitchen`. If none of them are playing, but you have another device playing,
+If none of them are playing, but you have another device playing,
 the currently playing will be displayed by default. As soon as any of your favorite devices start playing, it will be displayed instead.
 
-Remember to restart your application after changing any of these variables for the changes to take effect.
+Once you have set the configuration, if you ever want to change it again, navigate to `/config` in your browser.
+
+## Screenshots
+
+Player:
+![PlexArt Display](./player_example.png)
+
+Album Library:
+![PlexArt Display](./album_example.png)
 
 ## Running with Docker Compose
 
