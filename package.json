@@ -1,5 +1,5 @@
 {
-  "name": "whats-playing",
+  "name": "plexart",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,20 +8,10 @@
     "@fontsource/roboto": "^5.0.12",
     "@mui/icons-material": "^5.15.12",
     "@mui/material": "^5.15.12",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.87",
-    "@types/react": "^18.2.64",
-    "@types/react-dom": "^18.2.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-responsive-carousel": "^3.2.23",
-    "react-scripts": "5.0.1",
     "react-xml-parser": "^1.1.8",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4",
     "wouter": "^3.1.0",
     "zustand": "^4.5.2"
   },
@@ -35,7 +25,10 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "react-hooks/exhaustive-deps": "off"
+    }
   },
   "browserslist": {
     "production": [
@@ -51,6 +44,16 @@
   },
   "devDependencies": {
     "@types/xml2js": "^0.4.14",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.87",
+    "@types/react": "^18.2.64",
+    "@types/react-dom": "^18.2.21",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
   }
 }
