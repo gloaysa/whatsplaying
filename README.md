@@ -1,38 +1,38 @@
 
 <img align="right" width="33%" src="./logo.png"> 
-<h1>PlexArt Display</h1>
+<h1>What's Playing</h1>
 
 
 
 
-Welcome to PlexArt , a web application that brings your music to life. This project is all about showcasing your currently playing album art in a visually appealing way, turning your browser into a vibrant music hub.
+Welcome to **What's Playing**, a web application that brings your music cover art from Plex to live. This project is all about showcasing your currently playing album art in a visually appealing way, turning your browser into a vibrant music hub.
 
-PlexArt is more than just a pretty face. It offers basic music controls like play, pause, volume adjustment, and track navigation. But these controls are designed to be unobtrusive, appearing only when you need them, so the album art always takes center stage.
+**What's Playing** is more than just a pretty face. It offers basic music controls like play, pause, volume adjustment, and track navigation. But these controls are designed to be unobtrusive, appearing only when you need them, so the album art always takes center stage.
 
-One of the key features of PlexArt is the ability to browse through your Plex devices. Imagine a slide show where each slide is a different device, and you can flip through them with a simple swipe.
+One of the key features of **What's Playing** is the ability to browse through your Plex devices. Imagine a slide show where each slide is a different device, and you can flip through them with a simple swipe.
 
-But that's not all. PlexArt also has an 'Album Library' mode. Picture another slide show, this time with all the albums in your library. The slides change automatically, and the albums are chosen at random, so you never know what's coming next. It's like your own personal music lottery!
+But that's not all. **What's Playing** also has an 'Album Library' mode. Picture another slide show, this time with all the albums in your library. The slides change automatically, and the albums are chosen at random, so you never know what's coming next. It's like your own personal music lottery!
 
-The end goal of PlexArt is to be a dedicated music display in your living room or media room. It's a way to add a touch of style and interactivity to your music listening experience.
+The end goal of **What's Playing** is to be a dedicated music display in your living room or media room. It's a way to add a touch of style and interactivity to your music listening experience.
 
 ## Features
 
-PlexArt is packed with features designed to enhance your music listening experience:
+**What's Playing** is packed with features designed to enhance your music listening experience:
 
-- **Album Art Display**: The main feature of PlexArt is the ability to display the album art of the currently playing track. 
+- **Album Art Display**: The main feature of **What's Playing** is the ability to display the album art of the currently playing track. 
 The album art takes up the entire screen, providing a visually appealing backdrop to your music.
-- **Basic Music Controls**: PlexArt provides basic music controls including play, pause, volume adjustment, and track navigation.
+- **Basic Music Controls**: **What's Playing** provides basic music controls including play, pause, volume adjustment, and track navigation.
 These controls are designed to be unobtrusive, appearing only when you interact with the screen.
-- **Lyrics Display**: If available, PlexArt can show the lyrics of the currently playing song.
+- **Lyrics Display**: If available, **What's Playing** can show the lyrics of the currently playing song.
 - **Device Carousel**: Browse through all your Plex devices with a simple swipe. 
 Each device is displayed as a slide in a carousel, making it easy to switch between devices.
 - **Album Library Mode**: In Album Library mode, all the albums in your library are displayed in a carousel.
 The carousel auto-plays, changing slides every few seconds. The albums are chosen at random, providing a unique and engaging experience every time.
-- **Works with your Sonos devices**: If you start a playlist or album on a Sonos device, PlexArt will automatically switch to that device and display the album art.
+- **Works with your Sonos devices**: If you start a playlist or album on a Sonos device, **What's Playing** will automatically switch to that device and display the album art.
 
 ## Configurations
 
-PlexArt can be customized to suit your needs by setting configurations.
+**What's Playing** can be customized to suit your needs by setting configurations.
 The first time you run the application, you will be prompted to enter your Plex token and other configurations.
 
 - `PLEX_TOKEN`: MANDATORY. This is your Plex token. It's used to authenticate with your Plex server. 
@@ -51,16 +51,16 @@ Once you have set the configuration, if you ever want to change it again, naviga
 ## Screenshots
 
 Player:
-![PlexArt](./example_player.png)
+![What's Playing](./example_player.png)
 
 Album Library:
-![PlexArt](./example_album.png)
+![What's Playing](./example_album.png)
 
 Displaying lyrics:
-![PlexArt](./example_lyrics.png)
+![What's Playing](./example_lyrics.png)
 
 Displaying controls (mouse hovering over the album art or touching the screen):
-![PlexArt](./example_controls.png)
+![What's Playing](./example_controls.png)
 
 ## Running with Docker Compose
 
@@ -72,10 +72,10 @@ First, you need to create a `docker-compose.yml` file in your project directory 
 ```yaml
 version: '3.8'
 services:
-  plexart:
-    container_name: plexart
+  whatsplaying:
+    container_name: whatsplaying
     restart: unless-stopped
-    image: ghcr.io/gloaysa/plexart:main
+    image: ghcr.io/gloaysa/whatsplaying:main
     ports:
       - '5000:5000'
 ```

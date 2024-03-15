@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  plexart:
-    container_name: plexart
+  whatsplaying:
+    container_name: whatsplaying
     restart: unless-stopped
     build: .
     ports:

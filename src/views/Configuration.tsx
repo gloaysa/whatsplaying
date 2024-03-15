@@ -78,7 +78,7 @@ export const Configuration: FunctionComponent = () => {
         <form onSubmit={handleSubmit}>
           <CardContent>
             <Typography variant="body1" sx={{ paddingBottom: "15px" }}>
-              PlexArt Display can be customized to suit your needs by setting
+              What's Playing can be customized to suit your needs by setting
               some configurations, like what Plex libraries you would like to
               hide from your Album showcase (you maybe have a library of type
               music for audiobooks or Christmas music to not have it merged with
