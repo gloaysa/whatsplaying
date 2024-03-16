@@ -1,5 +1,5 @@
-import React, { useState, useEffect, FunctionComponent, FormEvent } from "react";
-import { TextField, Button, Box, Typography, Card, CardContent, Grid } from "@mui/material";
+import React, { FormEvent, FunctionComponent, useEffect, useState } from "react";
+import { Box, Button, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
 
 export const Configuration: FunctionComponent = () => {
   const [plexToken, setPlexToken] = useState("");

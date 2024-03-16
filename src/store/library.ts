@@ -2,18 +2,13 @@ import { Library, LibraryItem } from "./library.interface";
 import { mediaPlayerHeaders } from "./utils/getHeaders";
 import { MediaPlayer } from "./media-player.type";
 
-export const getLibrary = async (
-  player: MediaPlayer,
-  librariesToHide: string[],
-): Promise<LibraryItem[]> => {
+export const getLibrary = async (player: MediaPlayer, librariesToHide: string[]): Promise<LibraryItem[]> => {
   const response = await fetch(`${player.server.uri}/library/sections/`, {
     headers: mediaPlayerHeaders(player),
   });
 
   const library: Library = await response.json();
-  const musicLibrary = library.MediaContainer.Directory.filter(
-    (directory) => directory.type === "artist",
-  );
+  const musicLibrary = library.MediaContainer.Directory.filter((directory) => directory.type === "artist");
   return getAlbums(player, musicLibrary, librariesToHide);
 };
 

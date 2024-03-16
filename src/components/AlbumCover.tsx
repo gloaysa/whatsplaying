@@ -23,12 +23,7 @@ export const AlbumCover: FunctionComponent<IAlbumProps> = ({ mediaUrl }) => {
 
   return (
     <div>
-      <img
-        style={{ objectFit: "contain" }}
-        height={getHeight()}
-        src={getMediaUrl(mediaUrl)}
-        alt="album cover"
-      />
+      <img style={{ objectFit: "contain" }} height={getHeight()} src={getMediaUrl(mediaUrl)} alt="album cover" />
     </div>
   );
 };

@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Route, Switch, useLocation } from "wouter";
-import { useLibraryStore, useMediaPlayerStore, useUserStore } from "./store/store";
+import { useUserStore } from "./store/store";
 import { Box } from "@mui/material";
 import { MediaPlayers } from "./views/MediaPlayers";
 import MusicLibrary from "./views/MusicLibrary";

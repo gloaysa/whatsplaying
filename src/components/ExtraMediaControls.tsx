@@ -11,10 +11,7 @@ interface IMediaControlsProps {
 /**
  * Returns a component displaying the title, album, and artist of a media item
  */
-export const ExtraMediaControls: FunctionComponent<IMediaControlsProps> = ({
-  showAlbums,
-  showLyrics,
-}) => {
+export const ExtraMediaControls: FunctionComponent<IMediaControlsProps> = ({ showAlbums, showLyrics }) => {
   return (
     <Container>
       <Box
@@ -25,18 +22,10 @@ export const ExtraMediaControls: FunctionComponent<IMediaControlsProps> = ({
           justifyContent: "flex-end",
         }}
       >
-        <IconButton
-          color="primary"
-          aria-label="show lyrics"
-          onClick={() => showLyrics()}
-        >
+        <IconButton color="primary" aria-label="show lyrics" onClick={() => showLyrics()}>
           <LyricsIcon />
         </IconButton>
-        <IconButton
-          color="primary"
-          aria-label="show albums"
-          onClick={() => showAlbums()}
-        >
+        <IconButton color="primary" aria-label="show albums" onClick={() => showAlbums()}>
           <LibraryMusicIcon />
         </IconButton>
       </Box>

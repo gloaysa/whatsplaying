@@ -11,13 +11,8 @@ interface IMediaPlayerProps {
   plexamp: MediaPlayer;
   isSelected: boolean;
 }
-export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({
-  plexamp,
-  isSelected,
-}) => {
-  const { update, getLyrics, setSelectMediaPlayer } = useMediaPlayerStore(
-    (state) => state,
-  );
+export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, isSelected }) => {
+  const { update, getLyrics, setSelectMediaPlayer } = useMediaPlayerStore((state) => state);
   useEffect(() => {}, [isSelected, plexamp, update]);
   const [lyrics, setLyrics] = useState<Lyrics | undefined>();
   const [showLyrics, setShowLyrics] = useState(false);
@@ -53,15 +48,10 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({
 
   return (
     <div>
-      {lyrics && showLyrics && (
-        <LyricsDisplay lyrics={lyrics} mediaPlayer={plexamp} />
-      )}
+      {lyrics && showLyrics && <LyricsDisplay lyrics={lyrics} mediaPlayer={plexamp} />}
       <AlbumCover mediaUrl={plexamp.metadata?.thumb} />
       <div className="legend">
-        <ExtraMediaControls
-          showLyrics={() => setShowLyrics(!showLyrics)}
-          showAlbums={() => setLocation("/albums")}
-        />
+        <ExtraMediaControls showLyrics={() => setShowLyrics(!showLyrics)} showAlbums={() => setLocation("/albums")} />
         <MediaControls plexamp={plexamp} />
       </div>
     </div>

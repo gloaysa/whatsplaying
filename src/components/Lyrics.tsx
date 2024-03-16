@@ -7,10 +7,7 @@ interface LyricsDisplayProps {
   mediaPlayer: MediaPlayer;
 }
 
-const LyricsDisplay: React.FC<LyricsDisplayProps> = ({
-  lyrics,
-  mediaPlayer,
-}) => {
+const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ lyrics, mediaPlayer }) => {
   const [currentLine, setCurrentLine] = useState("");
   const [previousLines, setPreviousLines] = useState<string[]>([]);
   const [upcomingLines, setUpcomingLines] = useState<string[]>([]);
@@ -23,18 +20,16 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({
     } else {
       setCurrentLine("...");
     }
-    const nextLines = lyrics.Line.slice(
-      currentIndex + 1,
-      currentIndex + 11,
-    ).map((line) => line.Span?.[0]?.text || "...");
+    const nextLines = lyrics.Line.slice(currentIndex + 1, currentIndex + 11).map(
+      (line) => line.Span?.[0]?.text || "...",
+    );
     setUpcomingLines(nextLines);
   };
 
   const setPreviousLinesFromIndex = (lyrics: Lyrics, currentIndex: number) => {
-    const prevLines = lyrics.Line.slice(
-      Math.max(0, currentIndex - 5),
-      currentIndex,
-    ).map((line) => line.Span?.[0]?.text || "...");
+    const prevLines = lyrics.Line.slice(Math.max(0, currentIndex - 5), currentIndex).map(
+      (line) => line.Span?.[0]?.text || "...",
+    );
     setPreviousLines(prevLines);
   };
 
@@ -48,8 +43,7 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({
     // Effect hook to update the current line and previous lines based on the current time of the media player
     const currentTime = Number(mediaPlayer.time) + 1000; // add a second to compensate for the delay
     const currentIndex = lyrics.Line.findIndex(
-      (line) =>
-        currentTime >= line.startOffset && currentTime <= line.endOffset,
+      (line) => currentTime >= line.startOffset && currentTime <= line.endOffset,
     );
     if (currentIndex !== -1) {
       setCurrentAndUpcomingLines(lyrics, currentIndex);

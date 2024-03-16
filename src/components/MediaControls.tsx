@@ -1,13 +1,5 @@
 import { FunctionComponent } from "react";
-import {
-  Box,
-  CircularProgress,
-  Container,
-  IconButton,
-  LinearProgress,
-  Slider,
-  Typography,
-} from "@mui/material";
+import { Box, CircularProgress, Container, IconButton, LinearProgress, Slider, Typography } from "@mui/material";
 import { Pause, PlayArrow, SkipNext, SkipPrevious } from "@mui/icons-material";
 import { MediaPlayer } from "../store/media-player.type";
 import { useMediaPlayerStore } from "../store/store";
@@ -19,11 +11,8 @@ interface IMediaControlsProps {
 /**
  * Returns a component displaying the title, album, and artist of a media item
  */
-export const MediaControls: FunctionComponent<IMediaControlsProps> = ({
-  plexamp,
-}) => {
-  const { play, pause, nextTrack, previousTrack, setVolumeLevel } =
-    useMediaPlayerStore((state) => state);
+export const MediaControls: FunctionComponent<IMediaControlsProps> = ({ plexamp }) => {
+  const { play, pause, nextTrack, previousTrack, setVolumeLevel } = useMediaPlayerStore((state) => state);
 
   if (!plexamp) {
     return <CircularProgress />;
@@ -69,36 +58,20 @@ export const MediaControls: FunctionComponent<IMediaControlsProps> = ({
               justifyContent: "space-around",
             }}
           >
-            <IconButton
-              color="primary"
-              aria-label="previous"
-              onClick={() => previousTrack(plexamp)}
-            >
+            <IconButton color="primary" aria-label="previous" onClick={() => previousTrack(plexamp)}>
               <SkipPrevious />
             </IconButton>
             {plexamp.state === "playing" ? (
-              <IconButton
-                color="primary"
-                aria-label="pause"
-                onClick={() => pause(plexamp)}
-              >
+              <IconButton color="primary" aria-label="pause" onClick={() => pause(plexamp)}>
                 <Pause />
               </IconButton>
             ) : (
-              <IconButton
-                color="primary"
-                aria-label="play"
-                onClick={() => play(plexamp)}
-              >
+              <IconButton color="primary" aria-label="play" onClick={() => play(plexamp)}>
                 <PlayArrow />
               </IconButton>
             )}
 
-            <IconButton
-              color="primary"
-              aria-label="next"
-              onClick={() => nextTrack(plexamp)}
-            >
+            <IconButton color="primary" aria-label="next" onClick={() => nextTrack(plexamp)}>
               <SkipNext />
             </IconButton>
           </Box>
@@ -117,19 +90,14 @@ export const MediaControls: FunctionComponent<IMediaControlsProps> = ({
               value={plexamp.volume_level}
               min={0}
               max={100}
-              onChange={(event, value) =>
-                setVolumeLevel(plexamp, value as number)
-              }
+              onChange={(event, value) => setVolumeLevel(plexamp, value as number)}
             />
             <Typography variant="subtitle2">{plexamp.name}</Typography>
           </Box>
         </Box>
       </Box>
       <Box sx={{ width: "100%" }}>
-        <LinearProgress
-          variant="determinate"
-          value={(plexamp.time / plexamp.duration) * 100}
-        />
+        <LinearProgress variant="determinate" value={(plexamp.time / plexamp.duration) * 100} />
       </Box>
     </Container>
   );
