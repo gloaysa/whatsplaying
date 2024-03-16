@@ -6,10 +6,6 @@ on:
       - main
       - develop
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
   build:
     name: Release new semantic version
@@ -35,7 +31,7 @@ jobs:
         uses: cycjimmy/semantic-release-action@v3
         id: semver
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
   publish:
     name: Build Docker image
     needs: build
@@ -47,7 +43,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_PAT }}
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
