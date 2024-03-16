@@ -18,7 +18,7 @@
         "dockerFile": "Dockerfile",
         "dockerRegistry": "ghcr.io",
         "dockerRegistryUser": "${secrets.GHCR_PAT}",
-        "dockerRegistryPassword": "${github.actor}"
+        "dockerRegistryPassword": "${github.actor}",
         "dockerBuildFlags": {
           "pull": null,
           "target": "release"
