@@ -44,6 +44,7 @@ export const MediaPlayers: FunctionComponent = () => {
       renderItem={customRenderItem}
       className="presentation-mode"
       swipeable
+      showStatus={false}
     >
       {mediaPlayers.map((player) => (
         <MediaDisplay key={player.clientIdentifier} plexamp={player} isSelected={false} />

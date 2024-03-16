@@ -16,6 +16,8 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
   useEffect(() => {}, [isSelected, plexamp, update]);
   const [lyrics, setLyrics] = useState<Lyrics | undefined>();
   const [showLyrics, setShowLyrics] = useState(false);
+  const [isInteracting, setIsInteracting] = useState(false);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | undefined>();
 
   const [, setLocation] = useLocation();
 
@@ -33,11 +35,23 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
     return () => clearInterval(interval);
   }, [isSelected, update]);
 
+  /**
+   * When the media player is selected in the carousel, set the selected media player in the store.
+   */
   useEffect(() => {
     if (isSelected) {
       setSelectMediaPlayer(plexamp);
     }
   }, [isSelected]);
+
+  /**
+   * If the user is not interacting with the page for 5 seconds, hide the media controls.
+   */
+  const handleInteraction = () => {
+    clearTimeout(timeoutId);
+    setIsInteracting(true);
+    setTimeoutId(setTimeout(() => setIsInteracting(false), 5000));
+  };
 
   useEffect(() => {
     // when the media player changes, get the lyrics for the new media player
@@ -47,13 +61,15 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
   }, [getLyrics, plexamp.metadata?.playQueueItemID]);
 
   return (
-    <div>
+    <div onMouseMove={handleInteraction} onTouchMove={handleInteraction}>
       {lyrics && showLyrics && <LyricsDisplay lyrics={lyrics} mediaPlayer={plexamp} />}
       <AlbumCover mediaUrl={plexamp.metadata?.thumb} />
-      <div className="legend">
-        <ExtraMediaControls showLyrics={() => setShowLyrics(!showLyrics)} showAlbums={() => setLocation("/albums")} />
-        <MediaControls plexamp={plexamp} />
-      </div>
+      {isInteracting && (
+        <div className="legend">
+          <ExtraMediaControls showLyrics={() => setShowLyrics(!showLyrics)} showAlbums={() => setLocation("/albums")} />
+          <MediaControls plexamp={plexamp} />
+        </div>
+      )}
     </div>
   );
 };

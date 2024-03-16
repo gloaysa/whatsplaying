@@ -59,20 +59,25 @@ export const MediaControls: FunctionComponent<IMediaControlsProps> = ({ plexamp 
             }}
           >
             <IconButton color="primary" aria-label="previous" onClick={() => previousTrack(plexamp)}>
-              <SkipPrevious />
+              <SkipPrevious sx={{ fontSize: "2rem", width: "3rem", height: "3rem" }} />
             </IconButton>
             {plexamp.state === "playing" ? (
               <IconButton color="primary" aria-label="pause" onClick={() => pause(plexamp)}>
-                <Pause />
+                <Pause sx={{ fontSize: "2rem", width: "3rem", height: "3rem" }} />
               </IconButton>
             ) : (
-              <IconButton color="primary" aria-label="play" onClick={() => play(plexamp)}>
-                <PlayArrow />
+              <IconButton
+                color="primary"
+                sx={{ fontSize: "2rem", width: "3rem", height: "3rem" }}
+                aria-label="play"
+                onClick={() => play(plexamp)}
+              >
+                <PlayArrow sx={{ fontSize: "2rem", width: "3rem", height: "3rem" }} />
               </IconButton>
             )}
 
             <IconButton color="primary" aria-label="next" onClick={() => nextTrack(plexamp)}>
-              <SkipNext />
+              <SkipNext sx={{ fontSize: "2rem", width: "3rem", height: "3rem" }} />
             </IconButton>
           </Box>
           <Box // volume control
