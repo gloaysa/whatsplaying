@@ -2,6 +2,10 @@
   "name": "whatsplaying",
   "version": "0.1.0",
   "private": true,
+  "respository": {
+    "type": "git",
+    "url": "git+https://github.com/gloaysa/whatsplaying.git"
+  },
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
@@ -44,8 +48,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@types/xml2js": "^0.4.14",
-    "prettier": "^3.2.5",
+    "@codedependant/semantic-release-docker": "^4.5.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -53,7 +56,10 @@
     "@types/node": "^16.18.87",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
+    "@types/xml2js": "^0.4.14",
+    "prettier": "^3.2.5",
     "react-scripts": "5.0.1",
+    "semantic-release": "^23.0.4",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   }

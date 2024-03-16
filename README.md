@@ -2,10 +2,9 @@
 <img align="right" width="33%" src="./logo.png"> 
 <h1>What's Playing</h1>
 
-
-
-
 Welcome to **What's Playing**, a web application that brings your music cover art from Plex to live. This project is all about showcasing your currently playing album art in a visually appealing way, turning your browser into a vibrant music hub.
+
+If your personal music collection don't have really good cover art, I created a [python script that will download them for you](https://github.com/gloaysa/whatsplaying/wiki/How-to-get-high-quality-covers-for-all-your-music). Please, read the instructions provided before using!
 
 **What's Playing** is more than just a pretty face. It offers basic music controls like play, pause, volume adjustment, and track navigation. But these controls are designed to be unobtrusive, appearing only when you need them, so the album art always takes center stage.
 
