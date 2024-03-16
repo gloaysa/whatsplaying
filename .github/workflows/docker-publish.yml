@@ -32,6 +32,7 @@ jobs:
         id: semver
         env:
           GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
+          GH_TOKEN: ${{ secrets.GHCR_PAT }}
   publish:
     name: Build Docker image
     needs: build
