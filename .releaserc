@@ -17,8 +17,6 @@
         "dockerImage": "whatsplaying",
         "dockerFile": "Dockerfile",
         "dockerRegistry": "ghcr.io",
-        "dockerRegistryUser": "${github.actor}",
-        "dockerRegistryPassword": "${secrets.GHCR_PAT}",
         "dockerBuildFlags": {
           "pull": null,
           "target": "release"
