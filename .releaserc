@@ -24,8 +24,6 @@
         "dockerArgs": {
           "RELEASE_DATE": new Date().toISOString(),
           "RELEASE_VERSION": "{{next.version}}",
-          "DOCKER_REGISTRY_PASSWORD": "${{ secrets.GHCR_PAT }}",
-          "DOCKER_REGISTRY_USERNAME": "${{ github.actor }}",
         }
       }
     ]
