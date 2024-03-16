@@ -11,14 +11,15 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-deploy:
+  build:
+    name: Release new semantic version
     runs-on: ubuntu-latest
-
+    outputs:
+      didRelease: ${{ steps.semver.outputs.new_release_published }}
+      newVersion: ${{ steps.semver.outputs.new_release_version }}
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GHCR_PAT }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,14 +31,25 @@ jobs:
 
       - name: Build application
         run: npm run build
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_PAT }}
-
-      - run: npx semantic-release
+      - name: semantic-release
+        uses: cycjimmy/semantic-release-action@v3
+        id: semver
         env:
-          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  publish:
+    name: Build Docker image
+    needs: build
+    if: needs.release.outputs.didRelease == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ghcr.io/${{ github.repository }}:${{ needs.release.outputs.newVersion }}
