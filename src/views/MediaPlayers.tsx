@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactNode } from "react";
+import React, { FunctionComponent, ReactNode, useEffect } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import { MediaDisplay } from "../components/MediaDisplay";
@@ -11,7 +11,18 @@ import { Spinner } from "../components/Spinner";
  * Takes the whole available width and height.
  */
 export const MediaPlayers: FunctionComponent = () => {
-  const { mediaPlayers } = useMediaPlayerStore((state) => state);
+  const {
+    mediaPlayers,
+    getMediaPlayers,
+    configuration: { plexToken },
+  } = useMediaPlayerStore((state) => state);
+
+  useEffect(() => {
+    if (!mediaPlayers?.length && plexToken) {
+      getMediaPlayers();
+    }
+  }, [mediaPlayers, getMediaPlayers]);
+
   const customRenderItem = (
     item: any,
     options?:
@@ -35,11 +46,7 @@ export const MediaPlayers: FunctionComponent = () => {
       swipeable
     >
       {mediaPlayers.map((player) => (
-        <MediaDisplay
-          key={player.clientIdentifier}
-          plexamp={player}
-          isSelected={false}
-        />
+        <MediaDisplay key={player.clientIdentifier} plexamp={player} isSelected={false} />
       ))}
     </Carousel>
   );

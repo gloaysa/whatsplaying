@@ -1,11 +1,6 @@
 // @ts-ignore
 import XMLParser from "react-xml-parser";
-import {
-  BaseMediaPlayerServer,
-  PlexResource,
-  PlexSonosResource,
-  PlexUser,
-} from "./server.interface";
+import { BaseMediaPlayerServer, PlexResource, PlexSonosResource, PlexUser } from "./server.interface";
 import { MediaPlayer } from "./media-player.type";
 
 const getHeaders = (token: string) => ({
@@ -45,9 +40,14 @@ export async function getMediaPlayers(token: string): Promise<MediaPlayer[]> {
       method: "GET",
     });
     const resources = await response.json();
+    if (response.status === 401) {
+      throw new Error("The Plex token is invalid! Please update it in the settings. You are going to be redirected", {
+        cause: "token",
+      });
+    }
     const server = getServerInfo(resources);
     if (!server) {
-      return [];
+      throw new Error("We couldn't find a server in your local network :(");
     }
     const clients = await getClients(resources, server, token);
     const sonos = await getSonosResource(server, token);
@@ -57,10 +57,11 @@ export async function getMediaPlayers(token: string): Promise<MediaPlayer[]> {
         // sorts by name
         .sort((a, b) => a.name.localeCompare(b.name))
     );
-  } catch (error) {
-    throw new Error(
-      "Error fetching media players, are you providing the plex token?",
-    );
+  } catch (error: any) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("An error occurred while fetching the media players", error);
   }
 }
 
@@ -69,10 +70,7 @@ export async function getMediaPlayers(token: string): Promise<MediaPlayer[]> {
  * @returns An array of sonos media players.
  * @param server
  */
-async function getSonosResource(
-  server: BaseMediaPlayerServer,
-  token: string,
-): Promise<MediaPlayer[]> {
+async function getSonosResource(server: BaseMediaPlayerServer, token: string): Promise<MediaPlayer[]> {
   const response = await fetch(`https://sonos.plex.tv/resources`, {
     headers: getHeaders(token),
     method: "GET",
@@ -80,26 +78,24 @@ async function getSonosResource(
   const data = await response.text();
 
   const json = new XMLParser().parseFromString(data, "application/xml");
-  return json.children.map(
-    ({ attributes }: { attributes: PlexSonosResource }) => ({
-      name: attributes.title,
-      product: attributes.product,
-      productVersion: attributes.platformVersion,
-      clientIdentifier: attributes.machineIdentifier,
-      protocol: attributes.protocol,
-      address: attributes.lanIP,
-      uri: "https://sonos.plex.tv",
-      token: token,
-      server: server,
-      state: "unknown",
-      media_duration: 0,
-      media_position: 0,
-      shuffle: "0",
-      repeat: "0",
-      volume_level: 0,
-      is_volume_muted: false,
-    }),
-  );
+  return json.children.map(({ attributes }: { attributes: PlexSonosResource }) => ({
+    name: attributes.title,
+    product: attributes.product,
+    productVersion: attributes.platformVersion,
+    clientIdentifier: attributes.machineIdentifier,
+    protocol: attributes.protocol,
+    address: attributes.lanIP,
+    uri: "https://sonos.plex.tv",
+    token: token,
+    server: server,
+    state: "unknown",
+    media_duration: 0,
+    media_position: 0,
+    shuffle: "0",
+    repeat: "0",
+    volume_level: 0,
+    is_volume_muted: false,
+  }));
 }
 
 /**
@@ -107,9 +103,7 @@ async function getSonosResource(
  * @returns The server info to be used in the media players.
  * @param resources
  */
-function getServerInfo(
-  resources: PlexResource[],
-): BaseMediaPlayerServer | undefined {
+function getServerInfo(resources: PlexResource[]): BaseMediaPlayerServer | undefined {
   const server = resources.find((resource) => resource.provides === "server");
   if (!server) {
     return undefined;
@@ -132,9 +126,7 @@ async function getClients(
   token: string,
 ): Promise<MediaPlayer[]> {
   // should find all the resources that are not the server, returning an array
-  const clients = resources.filter((resource) =>
-    resource.provides.match("client"),
-  );
+  const clients = resources.filter((resource) => resource.provides.match("client"));
 
   // iterate over the clients and do a fetch to get the client info, if fetch fails, remove the client from the array
   for (const client of clients) {
@@ -170,11 +162,7 @@ async function getClients(
   }));
 }
 
-function fetchWithTimeout(
-  url: string,
-  options: RequestInit,
-  timeout = 5000,
-): Promise<Response> {
+function fetchWithTimeout(url: string, options: RequestInit, timeout = 5000): Promise<Response> {
   return new Promise((resolve, reject) => {
     // Set up the timeout
     const timer = setTimeout(() => {

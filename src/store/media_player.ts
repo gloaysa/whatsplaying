@@ -1,47 +1,31 @@
 // @ts-ignore
 import XMLParser from "react-xml-parser";
-import {
-  Lyrics,
-  MediaPlayer,
-  MetadataFlat,
-  MetadataWithChildren,
-  Queue,
-} from "./media-player.type";
+import { Lyrics, MediaPlayer, MetadataFlat, MetadataWithChildren, Queue } from "./media-player.type";
 import { mediaPlayerHeaders } from "./utils/getHeaders";
 
-export async function sendPlayBackCommand(
-  mediaPlayer: MediaPlayer,
-  action: string,
-): Promise<void> {
+export async function sendPlayBackCommand(mediaPlayer: MediaPlayer, action: string): Promise<void> {
   const response = await fetch(`${mediaPlayer.uri}/player/playback/${action}`, {
     headers: mediaPlayerHeaders(mediaPlayer),
     method: "GET",
   });
   if (!response.ok) {
     console.error("Error sending playback command", response);
+    throw new Error(`Error sending playback action: ${action}`);
   }
 }
 
-export async function setParameterCommand(
-  mediaPlayer: MediaPlayer,
-  params: string,
-): Promise<void> {
-  const response = await fetch(
-    `${mediaPlayer.uri}/player/playback/setParameters?${params}`,
-    {
-      headers: mediaPlayerHeaders(mediaPlayer),
-      method: "GET",
-    },
-  );
+export async function setParameterCommand(mediaPlayer: MediaPlayer, params: string): Promise<void> {
+  const response = await fetch(`${mediaPlayer.uri}/player/playback/setParameters?${params}`, {
+    headers: mediaPlayerHeaders(mediaPlayer),
+    method: "GET",
+  });
   if (!response.ok) {
     console.error("Error sending parameter command", response);
+    throw new Error(`Error sending parameter command: ${params}`);
   }
 }
 
-export async function updateMediaPlayer(
-  mediaPlayer: MediaPlayer,
-  commandId: number,
-): Promise<MediaPlayer> {
+export async function updateMediaPlayer(mediaPlayer: MediaPlayer, commandId: number): Promise<MediaPlayer> {
   try {
     const baseUrl = `${mediaPlayer.uri}/player/timeline/poll?commandID=${commandId}`;
     const response = await fetch(`${baseUrl}&includeMetadata=1&type=music`, {
@@ -50,9 +34,7 @@ export async function updateMediaPlayer(
     });
     const data = await response.text();
     const json = new XMLParser().parseFromString(data, "application/xml");
-    const timeline = json.children.find(
-      (child: any) => child.attributes.type === "music",
-    );
+    const timeline = json.children.find((child: any) => child.attributes.type === "music");
     mediaPlayer = {
       ...mediaPlayer,
       ...timeline.attributes,
@@ -67,9 +49,6 @@ export async function updateMediaPlayer(
         (metadata) => metadata.playQueueItemID === mediaPlayer.playQueueItemID,
       );
       if (!currentlyPlaying) {
-        console.log(`${mediaPlayer.name} is not playing anything`);
-        console.log(`${mediaPlayer.playQueueItemID}`);
-        console.log(queueData.Metadata);
         return mediaPlayer;
       }
       const thumbUrl = currentlyPlaying?.thumb;
@@ -82,9 +61,8 @@ export async function updateMediaPlayer(
       mediaPlayer.queue = queueData;
     }
     return mediaPlayer;
-  } catch (e) {
-    console.error("Error updating state", e);
-    return mediaPlayer;
+  } catch (e: any) {
+    throw new Error(`Error updating media player ${mediaPlayer.name}: ${e.message}`);
   }
 }
 
@@ -107,28 +85,21 @@ const flattenMetadata = (metadata: MetadataWithChildren): MetadataFlat => {
   };
 };
 
-const getPlayQueues = async (
-  mediaPlayer: MediaPlayer,
-): Promise<Queue | undefined> => {
+const getPlayQueues = async (mediaPlayer: MediaPlayer): Promise<Queue | undefined> => {
   if (!mediaPlayer.containerKey) {
     return undefined;
   }
-  const response = await fetch(
-    `${mediaPlayer.server.uri}${mediaPlayer.containerKey}`,
-    {
-      headers: mediaPlayerHeaders(mediaPlayer),
-      method: "GET",
-    },
-  );
+  const response = await fetch(`${mediaPlayer.server.uri}${mediaPlayer.containerKey}`, {
+    headers: mediaPlayerHeaders(mediaPlayer),
+    method: "GET",
+  });
   if (response.ok) {
     const data = await response.json();
     return data.MediaContainer;
   }
 };
 
-export const getLyrics = async (
-  mediaPlayer: MediaPlayer,
-): Promise<Lyrics | undefined> => {
+export const getLyrics = async (mediaPlayer: MediaPlayer): Promise<Lyrics | undefined> => {
   if (!mediaPlayer.metadata?.Media.Part.Stream?.key) {
     return undefined;
   }

@@ -5,6 +5,8 @@ export type MediaPlayerState = {
     devicesOrder: string[];
     plexToken: string;
   };
+  error: string[];
+  removeError: (index: number) => void;
   mediaPlayers: MediaPlayer[];
   selectedMediaPlayer: MediaPlayer | undefined;
   setSelectMediaPlayer: (player: MediaPlayer) => void;

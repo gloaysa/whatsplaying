@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Container, Grid, IconButton, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { Carousel } from "react-responsive-carousel";
@@ -8,9 +8,19 @@ import { useLibraryStore, useMediaPlayerStore } from "../store/store";
 import { Spinner } from "../components/Spinner";
 
 const MusicLibrary: React.FC = () => {
-  const { library } = useLibraryStore((state) => state);
+  const {
+    library,
+    getLibrary,
+    configuration: { plexToken },
+  } = useLibraryStore((state) => state);
   const { selectedMediaPlayer } = useMediaPlayerStore((state) => state);
   const [, setLocation] = useLocation();
+
+  useEffect(() => {
+    if (!library?.length && selectedMediaPlayer && plexToken) {
+      getLibrary(selectedMediaPlayer);
+    }
+  }, [library, getLibrary, selectedMediaPlayer]);
 
   if (!selectedMediaPlayer) {
     setLocation("/");
@@ -35,12 +45,7 @@ const MusicLibrary: React.FC = () => {
         {library[0].Metadata.map((album) => (
           <Container key={album.key}>
             <AlbumCover mediaUrl={album.thumb} />
-            <Grid
-              container
-              className="legend"
-              justifyContent="space-between"
-              alignItems="center"
-            >
+            <Grid container className="legend" justifyContent="space-between" alignItems="center">
               <IconButton onClick={() => setLocation("/")}>
                 <ArrowBack color="secondary" fontSize="large" />
               </IconButton>
