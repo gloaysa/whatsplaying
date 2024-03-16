@@ -74,7 +74,9 @@ services:
   whatsplaying:
     container_name: whatsplaying
     restart: unless-stopped
-    image: ghcr.io/gloaysa/whatsplaying:main
+    image: ghcr.io/gloaysa/whatsplaying:latest
+    environment:
+      - PORT=5000 # default is 5000
     ports:
       - '5000:5000'
 ```

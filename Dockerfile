@@ -7,7 +7,9 @@ COPY ./build ./dist
 
 RUN npm install -g serve
 
-EXPOSE 5000
+ENV PORT=5000
 
-# The command to start the application
-CMD serve -s dist -l 5000
+EXPOSE $PORT
+
+# Use the environment variable in the command
+CMD serve -s dist -l $PORT
