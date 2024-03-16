@@ -71,31 +71,36 @@ export async function getMediaPlayers(token: string): Promise<MediaPlayer[]> {
  * @param server
  */
 async function getSonosResource(server: BaseMediaPlayerServer, token: string): Promise<MediaPlayer[]> {
-  const response = await fetch(`https://sonos.plex.tv/resources`, {
-    headers: getHeaders(token),
-    method: "GET",
-  });
-  const data = await response.text();
+  try {
+    const response = await fetch(`https://sonos.plex.tv/resources`, {
+      headers: getHeaders(token),
+      method: "GET",
+    });
+    const data = await response.text();
 
-  const json = new XMLParser().parseFromString(data, "application/xml");
-  return json.children.map(({ attributes }: { attributes: PlexSonosResource }) => ({
-    name: attributes.title,
-    product: attributes.product,
-    productVersion: attributes.platformVersion,
-    clientIdentifier: attributes.machineIdentifier,
-    protocol: attributes.protocol,
-    address: attributes.lanIP,
-    uri: "https://sonos.plex.tv",
-    token: token,
-    server: server,
-    state: "unknown",
-    media_duration: 0,
-    media_position: 0,
-    shuffle: "0",
-    repeat: "0",
-    volume_level: 0,
-    is_volume_muted: false,
-  }));
+    const json = new XMLParser().parseFromString(data, "application/xml");
+    return json.children.map(({ attributes }: { attributes: PlexSonosResource }) => ({
+      name: attributes.title,
+      product: attributes.product,
+      productVersion: attributes.platformVersion,
+      clientIdentifier: attributes.machineIdentifier,
+      protocol: attributes.protocol,
+      address: attributes.lanIP,
+      uri: "https://sonos.plex.tv",
+      token: token,
+      server: server,
+      state: "unknown",
+      media_duration: 0,
+      media_position: 0,
+      shuffle: "0",
+      repeat: "0",
+      volume_level: 0,
+      is_volume_muted: false,
+    }));
+  } catch {
+    console.log("No Sonos devices found, skipping...");
+    return [];
+  }
 }
 
 /**

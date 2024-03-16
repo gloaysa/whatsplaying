@@ -62,7 +62,9 @@ export async function updateMediaPlayer(mediaPlayer: MediaPlayer, commandId: num
     }
     return mediaPlayer;
   } catch (e: any) {
-    throw new Error(`Error updating media player ${mediaPlayer.name}: ${e.message}`);
+    throw new Error(
+      `Error updating media player ${mediaPlayer.name}: ${e.message} Make sure you are allowing Remote Control in Plexamp settings/Device/Remote Control (you might have to restart Plexamp app after enabling Remote Control for the changes to take effect)`,
+    );
   }
 }
 
