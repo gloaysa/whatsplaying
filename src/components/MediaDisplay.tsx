@@ -61,7 +61,7 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
   }, [getLyrics, plexamp.metadata?.playQueueItemID]);
 
   return (
-    <div onMouseMove={handleInteraction} onTouchMove={handleInteraction}>
+    <div onMouseMove={handleInteraction} onTouchMove={handleInteraction} style={{ height: "100vh" }}>
       {lyrics && showLyrics && <LyricsDisplay lyrics={lyrics} mediaPlayer={plexamp} />}
       <AlbumCover mediaUrl={plexamp.metadata?.thumb} />
       {isInteracting && (
