@@ -51,12 +51,17 @@ export async function updateMediaPlayer(mediaPlayer: MediaPlayer, commandId: num
       if (!currentlyPlaying) {
         return mediaPlayer;
       }
-      const thumbUrl = currentlyPlaying?.thumb;
+      const isTidal = currentlyPlaying.attribution === "com.tidal";
+      let thumbUrl = isTidal ? currentlyPlaying?.parentThumb : currentlyPlaying?.thumb;
       const thumbSize = "width=1080&height=1080";
       const thumbParameters = `url=${thumbUrl}&quality=90&format=png&X-Plex-Token=${mediaPlayer.token}`;
+      // TODO: this is ultra hacky, need to find where in the data the provider is
+      let thumb = isTidal
+        ? `https://images.plex.tv/photo/?url=${thumbUrl}`
+        : `${mediaPlayer.server.uri}/photo/:/transcode?${thumbSize}&${thumbParameters}`;
       mediaPlayer.metadata = {
         ...flattenMetadata(currentlyPlaying),
-        thumb: `${mediaPlayer.server.uri}/photo/:/transcode?${thumbSize}&${thumbParameters}`,
+        thumb,
       };
       mediaPlayer.queue = queueData;
     }

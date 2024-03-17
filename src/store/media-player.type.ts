@@ -63,6 +63,7 @@ export type MetadataWithChildren = MetaData<[Media<[Part<[Stream]>]>]>;
 export type MetaData<T> = {
   addedAt: number;
   duration: number;
+  attribution?: string;
   grandparentGuid: string;
   grandparentKey: string;
   grandparentRatingKey: string;
