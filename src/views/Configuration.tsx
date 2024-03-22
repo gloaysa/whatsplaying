@@ -1,19 +1,22 @@
 import React, { FormEvent, FunctionComponent, useEffect, useState } from "react";
-import { Box, Button, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Grid, Switch, TextField, Typography } from "@mui/material";
 
 export const Configuration: FunctionComponent = () => {
   const [plexToken, setPlexToken] = useState("");
   const [hideLibraries, setHideLibraries] = useState([""]);
   const [preferredOrder, setPreferredOrder] = useState([""]);
+  const [albumsTimeout, setAlbumsTimeout] = useState(false);
 
   useEffect(() => {
     const storedPlexToken = localStorage.getItem("plexToken");
     const storedHideLibraries = localStorage.getItem("hideLibraries");
     const storedPreferredOrder = localStorage.getItem("preferredOrder");
+    const displayAlbumsAutomatically = localStorage.getItem("albumsTimeout");
 
     if (storedPlexToken) setPlexToken(storedPlexToken);
     if (storedHideLibraries) setHideLibraries(storedHideLibraries.split(","));
     if (storedPreferredOrder) setPreferredOrder(storedPreferredOrder.split(","));
+    if (displayAlbumsAutomatically) setAlbumsTimeout(displayAlbumsAutomatically === "true");
   }, []);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -21,6 +24,7 @@ export const Configuration: FunctionComponent = () => {
     localStorage.setItem("plexToken", plexToken.trimStart().trimEnd());
     localStorage.setItem("hideLibraries", hideLibraries.join(","));
     localStorage.setItem("preferredOrder", preferredOrder.join(","));
+    localStorage.setItem("albumsTimeout", albumsTimeout.toString());
     window.location.assign("/");
   };
 
@@ -120,6 +124,18 @@ export const Configuration: FunctionComponent = () => {
                   </Box>
                 ))}
                 <Button onClick={() => handleAddField(setPreferredOrder, preferredOrder)}>Add a new device</Button>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography variant="body1" sx={{ paddingBottom: "5px" }}>
+                  When none of your media players are playing or paused, your album gallery will be displayed in the
+                  carousel. Disabled by default, you can enable this behaviour below.
+                </Typography>
+                <Switch
+                  value={albumsTimeout}
+                  aria-label="display albums when all stopped"
+                  onChange={(e) => setAlbumsTimeout(e.target.checked)}
+                />
               </Grid>
 
               <Grid item xs={12}>

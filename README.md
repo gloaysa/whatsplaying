@@ -45,6 +45,9 @@ For example, if you have devices named "Living Room", "Bedroom", and "Kitchen" a
 If none of them are playing, but you have another device playing,
 the currently playing will be displayed by default. As soon as any of your favorite devices start playing, it will be displayed instead.
 
+- `AUTO_START_ALBUM_LIBRARY`: OPTIONAL. This is a boolean value that determines if the Album Library should start
+- automatically if your media players are stopped/unreachable for 5 seconds. Defaults to false.
+
 Once you have set the configuration, if you ever want to change it again, navigate to `/config` in your browser.
 
 ## Screenshots
@@ -82,13 +85,13 @@ services:
 ```
 
 ## Roadmap
-[] - Properly handle errors.  
+[x] - Properly handle errors.  
 [] - Libraries are hardcoded (only the first one is shown).  
 [] - Display playlists.  
 [] - Add the ability to start albums/playlists.  
 [] - Display art from external services (tidal).  
 [] - Allow configuration of Album library carousel time between slides.  
-[] - Allow configuration to autostart Album library if nothing is playing for x-amount of time.  
+[x] - Allow configuration to autostart Album library if nothing is playing for 5 seconds.  
 
 ### Environment Variables
 

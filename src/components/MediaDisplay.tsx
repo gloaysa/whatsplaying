@@ -25,7 +25,7 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
 
   /**
    * Function that updates the media player state the first time the component is mounted.
-   * If the media player is selected, it will update the state every 5 seconds.
+   * If the media player is selected, it will update the state every second.
    * Else, it will update the state every 60 seconds.
    */
   useEffect(() => {
@@ -44,7 +44,7 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
     if (isSelected) {
       setSelectMediaPlayer(plexamp);
     }
-  }, [isSelected, plexamp.metadata?.playQueueItemID]);
+  }, [isSelected]);
 
   useEffect(() => {
     const colorThief = new ColorThief();
@@ -53,10 +53,8 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
       colorThief
         .getPaletteAsync(plexamp.metadata.thumb, 5)
         .then((palette) => {
-          console.log(palette);
           const gradientColors = palette.join(", ");
           const linearGradient = `radial-gradient(circle at center, ${gradientColors})`;
-          console.log(linearGradient);
           setBackgroundGradient(linearGradient);
         })
         .catch((error) => console.error(error));

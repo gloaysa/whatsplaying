@@ -11,6 +11,7 @@ const config = {
   PREFERRED_ORDER: localStorage.getItem("preferredOrder")?.split(",") ?? [],
   HIDE_LIBRARIES: localStorage.getItem("hideLibraries")?.split(",") ?? [],
   PLEX_TOKEN: localStorage.getItem("plexToken") ?? "",
+  ALBUMS_ON_TIMEOUT: localStorage.getItem("albumsTimeout") === "true" ?? false,
 };
 
 interface UserStoreState {
@@ -63,7 +64,8 @@ export const useMediaPlayerStore = create<MediaPlayerState>(
     (set, get: () => MediaPlayerState) => ({
       configuration: {
         devicesOrder: config.PREFERRED_ORDER.map((device: string) => device.trim().toLowerCase()) ?? [],
-        plexToken: config.PLEX_TOKEN ?? "",
+        plexToken: config.PLEX_TOKEN,
+        albumsOnTimeout: config.ALBUMS_ON_TIMEOUT,
       },
       error: [],
       removeError: (index: number) => {
@@ -110,6 +112,9 @@ export const useMediaPlayerStore = create<MediaPlayerState>(
         try {
           const devicesOrder = get().configuration.devicesOrder;
           const updated = await updateMediaPlayer(player, commandId);
+          if (updated.clientIdentifier === get().selectedMediaPlayer?.clientIdentifier) {
+            set({ selectedMediaPlayer: updated });
+          }
           commandId += 1;
           set({
             mediaPlayers: get()

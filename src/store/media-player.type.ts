@@ -4,6 +4,7 @@ export type MediaPlayerState = {
   configuration: {
     devicesOrder: string[];
     plexToken: string;
+    albumsOnTimeout: boolean;
   };
   error: string[];
   removeError: (index: number) => void;
