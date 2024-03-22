@@ -6,18 +6,20 @@ import { useMediaPlayerStore } from "../store/store";
 import LyricsDisplay from "./Lyrics";
 import { ExtraMediaControls } from "./ExtraMediaControls";
 import { useLocation } from "wouter";
-import { createPortal } from "react-dom";
+import ColorThief from "color-thief-ts";
 
 interface IMediaPlayerProps {
   plexamp: MediaPlayer;
   isSelected: boolean;
 }
+
 export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, isSelected }) => {
   const { update, getLyrics, setSelectMediaPlayer, setShowLyrics, showLyrics } = useMediaPlayerStore((state) => state);
   useEffect(() => {}, [isSelected, plexamp, update]);
   const [lyrics, setLyrics] = useState<Lyrics | undefined>();
   const [isInteracting, setIsInteracting] = useState(false);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | undefined>();
+  const [backgroundGradient, setBackgroundGradient] = useState("");
 
   const [, setLocation] = useLocation();
 
@@ -42,7 +44,24 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
     if (isSelected) {
       setSelectMediaPlayer(plexamp);
     }
-  }, [isSelected]);
+  }, [isSelected, plexamp.metadata?.playQueueItemID]);
+
+  useEffect(() => {
+    const colorThief = new ColorThief();
+
+    if (plexamp.metadata?.thumb) {
+      colorThief
+        .getPaletteAsync(plexamp.metadata.thumb, 5)
+        .then((palette) => {
+          console.log(palette);
+          const gradientColors = palette.join(", ");
+          const linearGradient = `radial-gradient(circle at center, ${gradientColors})`;
+          console.log(linearGradient);
+          setBackgroundGradient(linearGradient);
+        })
+        .catch((error) => console.error(error));
+    }
+  }, [plexamp.metadata?.thumb]);
 
   /**
    * If the user is not interacting with the page for 5 seconds, hide the media controls.
@@ -61,7 +80,11 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
   }, [getLyrics, plexamp.metadata?.playQueueItemID]);
 
   return (
-    <div onMouseMove={handleInteraction} onTouchMove={handleInteraction} style={{ height: "100vh" }}>
+    <div
+      onMouseMove={handleInteraction}
+      onTouchMove={handleInteraction}
+      style={{ height: "100vh", backgroundImage: backgroundGradient }}
+    >
       {lyrics && isSelected && showLyrics && <LyricsDisplay lyrics={lyrics} mediaPlayer={plexamp} />}
       <AlbumCover mediaUrl={plexamp.metadata?.thumb} />
       {isInteracting && (
