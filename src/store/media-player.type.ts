@@ -21,6 +21,8 @@ export type MediaPlayerState = {
   muteVolume: (player: MediaPlayer) => Promise<void>;
   setVolumeLevel: (player: MediaPlayer, volume: number) => Promise<void>;
   getLyrics: (player: MediaPlayer) => Promise<Lyrics | undefined>;
+  setShowLyrics: (show: boolean) => void;
+  showLyrics: boolean;
   // ... other methods
 };
 

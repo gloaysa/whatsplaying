@@ -211,6 +211,11 @@ export const useMediaPlayerStore = create<MediaPlayerState>(
           set({ error: [...get().error, e.message] });
         }
       },
+      setShowLyrics: (show: boolean) => {
+        localStorage.setItem("showLyrics", show.toString());
+        set({ showLyrics: show });
+      },
+      showLyrics: localStorage.getItem("showLyrics") === "true" ?? false,
       // ... other methods
     }),
     { name: "MediaPlayerStore" },

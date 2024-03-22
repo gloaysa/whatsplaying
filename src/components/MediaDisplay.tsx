@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import { Lyrics, MediaPlayer } from "../store/media-player.type";
 import { AlbumCover } from "./AlbumCover";
 import { MediaControls } from "./MediaControls";
@@ -6,16 +6,16 @@ import { useMediaPlayerStore } from "../store/store";
 import LyricsDisplay from "./Lyrics";
 import { ExtraMediaControls } from "./ExtraMediaControls";
 import { useLocation } from "wouter";
+import { createPortal } from "react-dom";
 
 interface IMediaPlayerProps {
   plexamp: MediaPlayer;
   isSelected: boolean;
 }
 export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, isSelected }) => {
-  const { update, getLyrics, setSelectMediaPlayer } = useMediaPlayerStore((state) => state);
+  const { update, getLyrics, setSelectMediaPlayer, setShowLyrics, showLyrics } = useMediaPlayerStore((state) => state);
   useEffect(() => {}, [isSelected, plexamp, update]);
   const [lyrics, setLyrics] = useState<Lyrics | undefined>();
-  const [showLyrics, setShowLyrics] = useState(false);
   const [isInteracting, setIsInteracting] = useState(false);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | undefined>();
 
@@ -62,7 +62,7 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
 
   return (
     <div onMouseMove={handleInteraction} onTouchMove={handleInteraction} style={{ height: "100vh" }}>
-      {lyrics && showLyrics && <LyricsDisplay lyrics={lyrics} mediaPlayer={plexamp} />}
+      {lyrics && isSelected && showLyrics && <LyricsDisplay lyrics={lyrics} mediaPlayer={plexamp} />}
       <AlbumCover mediaUrl={plexamp.metadata?.thumb} />
       {isInteracting && (
         <div className="legend">
