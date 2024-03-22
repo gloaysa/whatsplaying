@@ -28,6 +28,7 @@ Each device is displayed as a slide in a carousel, making it easy to switch betw
 - **Album Library Mode**: In Album Library mode, all the albums in your library are displayed in a carousel.
 The carousel auto-plays, changing slides every few seconds. The albums are chosen at random, providing a unique and engaging experience every time.
 - **Works with your Sonos devices**: If you start a playlist or album on a Sonos device, **What's Playing** will automatically switch to that device and display the album art.
+- **Blur Background**: The background of page is blurred with the main colors of the currently playing album.
 
 ## Configurations
 
@@ -52,7 +53,7 @@ Once you have set the configuration, if you ever want to change it again, naviga
 
 ## Screenshots
 
-Player:
+Player with blurred background:
 ![What's Playing](./example_player.png)
 
 Album Library:
@@ -90,7 +91,7 @@ services:
 [] - Display playlists.  
 [] - Add the ability to start albums/playlists.  
 [] - Display art from external services (tidal).  
-[] - Allow configuration of Album library carousel time between slides.  
+[x] - Allow configuration of Album library carousel time between slides.  
 [x] - Allow configuration to autostart Album library if nothing is playing for 5 seconds.  
 
 ### Environment Variables

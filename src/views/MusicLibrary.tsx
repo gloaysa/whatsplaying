@@ -11,7 +11,7 @@ const MusicLibrary: React.FC = () => {
   const {
     library,
     getLibrary,
-    configuration: { plexToken },
+    configuration: { plexToken, intervalBetweenAlbums },
   } = useLibraryStore((state) => state);
   const { selectedMediaPlayer } = useMediaPlayerStore((state) => state);
   const [, setLocation] = useLocation();
@@ -39,8 +39,7 @@ const MusicLibrary: React.FC = () => {
         autoPlay
         infiniteLoop
         swipeable
-        interval={30000}
-        transitionTime={5000}
+        interval={intervalBetweenAlbums * 1000}
       >
         {library[0].Metadata.map((album) => (
           <Container key={album.key}>

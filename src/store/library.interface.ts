@@ -4,6 +4,7 @@ export type LibraryState = {
   configuration: {
     librariesToHide: string[];
     plexToken: string;
+    intervalBetweenAlbums: number;
   };
   library: LibraryItem[];
   getLibrary: (player: MediaPlayer) => Promise<void>;

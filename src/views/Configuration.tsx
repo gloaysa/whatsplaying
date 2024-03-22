@@ -1,30 +1,36 @@
 import React, { FormEvent, FunctionComponent, useEffect, useState } from "react";
-import { Box, Button, Card, CardContent, Grid, Switch, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Grid, InputAdornment, Switch, TextField, Typography } from "@mui/material";
 
 export const Configuration: FunctionComponent = () => {
   const [plexToken, setPlexToken] = useState("");
   const [hideLibraries, setHideLibraries] = useState([""]);
   const [preferredOrder, setPreferredOrder] = useState([""]);
-  const [albumsTimeout, setAlbumsTimeout] = useState(false);
+  const [autoDisplayAlbums, setAutoDisplayAlbums] = useState(false);
+  const [intervalBetweenAlbums, setIntervalBetweenAlbums] = useState(30);
 
   useEffect(() => {
+    // Load configuration from localStorage and set the state
     const storedPlexToken = localStorage.getItem("plexToken");
     const storedHideLibraries = localStorage.getItem("hideLibraries");
     const storedPreferredOrder = localStorage.getItem("preferredOrder");
-    const displayAlbumsAutomatically = localStorage.getItem("albumsTimeout");
+    const storedAutoDisplayAlbums = localStorage.getItem("autoDisplayAlbums");
+    const storedIntervalBetweenAlbums = localStorage.getItem("intervalBetweenAlbums");
 
     if (storedPlexToken) setPlexToken(storedPlexToken);
     if (storedHideLibraries) setHideLibraries(storedHideLibraries.split(","));
     if (storedPreferredOrder) setPreferredOrder(storedPreferredOrder.split(","));
-    if (displayAlbumsAutomatically) setAlbumsTimeout(displayAlbumsAutomatically === "true");
+    if (storedAutoDisplayAlbums) setAutoDisplayAlbums(storedAutoDisplayAlbums === "true");
+    if (storedIntervalBetweenAlbums) setIntervalBetweenAlbums(Number(storedIntervalBetweenAlbums));
   }, []);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    //
     event.preventDefault();
     localStorage.setItem("plexToken", plexToken.trimStart().trimEnd());
     localStorage.setItem("hideLibraries", hideLibraries.join(","));
     localStorage.setItem("preferredOrder", preferredOrder.join(","));
-    localStorage.setItem("albumsTimeout", albumsTimeout.toString());
+    localStorage.setItem("albumsTimeout", autoDisplayAlbums.toString());
+    localStorage.setItem("intervalBetweenAlbums", intervalBetweenAlbums.toString());
     window.location.assign("/");
   };
 
@@ -132,9 +138,24 @@ export const Configuration: FunctionComponent = () => {
                   carousel. Disabled by default, you can enable this behaviour below.
                 </Typography>
                 <Switch
-                  value={albumsTimeout}
+                  value={autoDisplayAlbums}
                   aria-label="display albums when all stopped"
-                  onChange={(e) => setAlbumsTimeout(e.target.checked)}
+                  onChange={(e) => setAutoDisplayAlbums(e.target.checked)}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography variant="body1" sx={{ paddingBottom: "5px" }}>
+                  Time in seconds for the carousel to switch between albums. Default is 30 seconds.
+                </Typography>
+                <TextField
+                  value={intervalBetweenAlbums}
+                  type="number"
+                  aria-label="display albums when all stopped"
+                  onChange={(e) => setIntervalBetweenAlbums(Number(e.target.value ?? 30))}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">seconds</InputAdornment>,
+                  }}
                 />
               </Grid>
 

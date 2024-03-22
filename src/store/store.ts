@@ -11,7 +11,8 @@ const config = {
   PREFERRED_ORDER: localStorage.getItem("preferredOrder")?.split(",") ?? [],
   HIDE_LIBRARIES: localStorage.getItem("hideLibraries")?.split(",") ?? [],
   PLEX_TOKEN: localStorage.getItem("plexToken") ?? "",
-  ALBUMS_ON_TIMEOUT: localStorage.getItem("albumsTimeout") === "true" ?? false,
+  ALBUMS_ON_TIMEOUT: localStorage.getItem("autoDisplayAlbums") === "true" ?? false,
+  INTERVAL_BETWEEN_ALBUMS: Number(localStorage.getItem("intervalBetweenAlbums") ?? 30),
 };
 
 interface UserStoreState {
@@ -48,6 +49,7 @@ export const useLibraryStore = create<LibraryState>(
       configuration: {
         librariesToHide: config.HIDE_LIBRARIES.map((device: string) => device.trim().toLowerCase()) ?? [],
         plexToken: config.PLEX_TOKEN,
+        intervalBetweenAlbums: config.INTERVAL_BETWEEN_ALBUMS,
       },
       library: [],
       getLibrary: async (player: MediaPlayer) => {
