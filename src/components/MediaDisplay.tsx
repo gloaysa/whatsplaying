@@ -67,7 +67,6 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
           // Join the gradients into a single background image
           const backgroundImage = gradients.join(", ");
 
-          console.log(backgroundImage);
           setBackgroundGradient(backgroundImage);
         })
         .catch((error) => console.error(error));

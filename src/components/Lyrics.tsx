@@ -45,9 +45,13 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ lyrics, mediaPlayer }) =>
 
   useEffect(() => {
     const currentTime = Number(mediaPlayer.time) + 1000;
-    const currentIndex = lyrics.Line.findIndex(
+    let currentIndex = lyrics.Line.findIndex(
       (line) => currentTime >= line.startOffset && currentTime <= line.endOffset,
     );
+    // Special case for the last line
+    if (currentIndex === -1 && currentTime >= lyrics.Line[lyrics.Line.length - 1].startOffset) {
+      currentIndex = lyrics.Line.length - 1;
+    }
     if (currentIndex !== -1) {
       setCurrentAndUpcomingLines(lyrics, currentIndex);
       setPreviousLinesFromIndex(lyrics, currentIndex);
@@ -92,6 +96,7 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ lyrics, mediaPlayer }) =>
       style={{
         position: "fixed",
         height: "50%",
+        width: "80%",
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
@@ -108,22 +113,21 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ lyrics, mediaPlayer }) =>
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-start",
-          rowGap: "10px",
           padding: "20px",
         }}
       >
         {previousLines.map((line, index) => (
-          <Typography key={index} style={{ color: "grey" }} variant="h5">
+          <Typography key={index} style={{ padding: "20px", color: "grey" }} variant="h5">
             {line}
           </Typography>
         ))}
         <div ref={currentLineRef}>
-          <Typography style={{ color: "white" }} variant="h5">
+          <Typography style={{ padding: "20px", color: "white" }} variant="h5">
             {currentLine}
           </Typography>
         </div>
         {upcomingLines.map((line, index) => (
-          <Typography key={index} style={{ color: lyrics.timed ? "grey" : "white" }} variant="h5">
+          <Typography key={index} style={{ padding: "20px", color: lyrics.timed ? "grey" : "white" }} variant="h5">
             {line}
           </Typography>
         ))}
