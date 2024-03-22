@@ -51,11 +51,24 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
 
     if (plexamp.metadata?.thumb) {
       colorThief
-        .getPaletteAsync(plexamp.metadata.thumb, 5)
+        .getPaletteAsync(plexamp.metadata.thumb, 4, { quality: 1, colorType: "array" }) // Request 4 colors for the 4 gradients
         .then((palette) => {
-          const gradientColors = palette.join(", ");
-          const linearGradient = `radial-gradient(circle at center, ${gradientColors})`;
-          setBackgroundGradient(linearGradient);
+          // Convert each RGB array to a RGBA string with 80% opacity
+          const gradientColors = palette.map((rgb) => `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.8)`);
+
+          // Create 4 radial gradients, each with a different color and position
+          const gradients = [
+            `radial-gradient(circle at left bottom, ${gradientColors[2]} 0px, transparent 80%)`,
+            `radial-gradient(circle at right bottom, ${gradientColors[3]} 0px, transparent 80%)`,
+            `radial-gradient(circle at right top, ${gradientColors[2]} 0px, transparent 80%)`,
+            `radial-gradient(circle at left top, ${gradientColors[3]} 0px, transparent 80%)`,
+          ];
+
+          // Join the gradients into a single background image
+          const backgroundImage = gradients.join(", ");
+
+          console.log(backgroundImage);
+          setBackgroundGradient(backgroundImage);
         })
         .catch((error) => console.error(error));
     }
