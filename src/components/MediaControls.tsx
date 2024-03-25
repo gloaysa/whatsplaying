@@ -95,7 +95,7 @@ export const MediaControls: FunctionComponent<IMediaControlsProps> = ({ plexamp 
               value={plexamp.volume_level}
               min={0}
               max={100}
-              onChange={(event, value) => setVolumeLevel(plexamp, value as number)}
+              onChange={(_, value) => setVolumeLevel(plexamp, value as number)}
             />
             <Typography variant="subtitle2">{plexamp.name}</Typography>
           </Box>

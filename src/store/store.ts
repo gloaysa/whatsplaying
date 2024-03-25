@@ -11,7 +11,7 @@ const config = {
   PREFERRED_ORDER: localStorage.getItem("preferredOrder")?.split(",") ?? [],
   HIDE_LIBRARIES: localStorage.getItem("hideLibraries")?.split(",") ?? [],
   PLEX_TOKEN: localStorage.getItem("plexToken") ?? "",
-  ALBUMS_ON_TIMEOUT: localStorage.getItem("autoDisplayAlbums") === "true" ?? false,
+  ALBUMS_ON_TIMEOUT: localStorage.getItem("autoDisplayAlbums") === "true",
   INTERVAL_BETWEEN_ALBUMS: Number(localStorage.getItem("intervalBetweenAlbums") ?? 30),
 };
 
@@ -222,7 +222,7 @@ export const useMediaPlayerStore = create<MediaPlayerState>(
         localStorage.setItem("showLyrics", show.toString());
         set({ showLyrics: show });
       },
-      showLyrics: localStorage.getItem("showLyrics") === "true" ?? false,
+      showLyrics: localStorage.getItem("showLyrics") === "true",
       // ... other methods
     }),
     { name: "MediaPlayerStore" },

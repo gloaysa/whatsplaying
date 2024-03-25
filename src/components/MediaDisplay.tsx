@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { Lyrics, MediaPlayer } from "../store/media-player.type";
 import { AlbumCover } from "./AlbumCover";
 import { MediaControls } from "./MediaControls";
@@ -6,6 +6,7 @@ import { useMediaPlayerStore } from "../store/store";
 import LyricsDisplay from "./Lyrics";
 import { ExtraMediaControls } from "./ExtraMediaControls";
 import { useLocation } from "wouter";
+// @ts-expect-error - color-thief-ts is not typed
 import ColorThief from "color-thief-ts";
 
 interface IMediaPlayerProps {
@@ -52,14 +53,14 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
     if (plexamp.metadata?.thumb) {
       colorThief
         .getPaletteAsync(plexamp.metadata.thumb, 4, { quality: 1, colorType: "array" }) // Request 4 colors for the 4 gradients
-        .then((palette) => {
+        .then((palette: [[number, number, number, number]]) => {
           // Convert each RGB array to a RGBA string with 80% opacity
           const gradientColors = palette.map((rgb) => `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.8)`);
 
           // Create 4 radial gradients, each with a different color and position
           const gradients = [
-            `radial-gradient(circle at left bottom, ${gradientColors[2]} 0px, transparent 80%)`,
-            `radial-gradient(circle at right bottom, ${gradientColors[3]} 0px, transparent 80%)`,
+            `radial-gradient(circle at left bottom, ${gradientColors[0]} 0px, transparent 80%)`,
+            `radial-gradient(circle at right bottom, ${gradientColors[1]} 0px, transparent 80%)`,
             `radial-gradient(circle at right top, ${gradientColors[2]} 0px, transparent 80%)`,
             `radial-gradient(circle at left top, ${gradientColors[3]} 0px, transparent 80%)`,
           ];
@@ -69,7 +70,7 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
 
           setBackgroundGradient(backgroundImage);
         })
-        .catch((error) => console.error(error));
+        .catch((error: Error) => console.error(error));
     }
   }, [plexamp.metadata?.thumb]);
 

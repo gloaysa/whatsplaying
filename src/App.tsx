@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Switch, useLocation } from "wouter";
 import { useUserStore } from "./store/store";
 import { Box } from "@mui/material";

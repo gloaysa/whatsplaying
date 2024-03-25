@@ -94,18 +94,9 @@ services:
 [x] - Allow configuration of Album library carousel time between slides.  
 [x] - Allow configuration to autostart Album library if nothing is playing for 5 seconds.  
 
-### Environment Variables
-
-To run this project, you need to set the following environment variables in your `.env` file:
-
-- `REACT_APP_PLEX_TOKEN`: Your Plex token. You can find it following this [guide](https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/).
-- `REACT_APP_HIDE_LIBRARY`: A comma-separated list of library sections you want to hide.
-
 ## Development Guide
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-It uses:
-
+- [vite](https://vitejs.dev/) for the build tool.
 - [zustand](https://github.com/pmndrs/zustand) for state management.
 - [wouter](https://github.com/molefrog/wouter) for routing.
 - [react-response-carousel](https://github.com/leandrowd/react-responsive-carousel) for the carousel component.
@@ -114,9 +105,9 @@ It uses:
 
 In the project directory, you can run:
 
-- `npm start`: Runs the app in the development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-- `npm test`: Launches the test runner in the interactive watch mode.
-- `npm run build`: Builds the app for production to the `build` folder.
+- `npm run dev`: Runs the app in the development mode. Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+- `npm run build`: Builds the app for production to the `dist` folder.
+- `npm run preview`: after building the project, you can preview it with a local server.
 
 ### Serving with Nginx
 
@@ -128,7 +119,7 @@ server {
     server_name localhost;
 
     location / {
-        root /path/to/your/build/folder;
+        root /path/to/your/dist/folder;
         try_files $uri /index.html;
     }
 }
