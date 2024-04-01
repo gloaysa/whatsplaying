@@ -29,7 +29,7 @@ export const Configuration: FunctionComponent = () => {
     localStorage.setItem("plexToken", plexToken.trimStart().trimEnd());
     localStorage.setItem("hideLibraries", hideLibraries.join(","));
     localStorage.setItem("preferredOrder", preferredOrder.join(","));
-    localStorage.setItem("albumsTimeout", autoDisplayAlbums.toString());
+    localStorage.setItem("autoDisplayAlbums", autoDisplayAlbums.toString());
     localStorage.setItem("intervalBetweenAlbums", intervalBetweenAlbums.toString());
     window.location.assign("/");
   };
@@ -134,8 +134,8 @@ export const Configuration: FunctionComponent = () => {
 
               <Grid item xs={12}>
                 <Typography variant="body1" sx={{ paddingBottom: "5px" }}>
-                  When none of your media players are playing or paused, your album gallery will be displayed in the
-                  carousel. Disabled by default, you can enable this behaviour below.
+                  When the selected media player is stopped for 30 seconds, the carousel will switch to display your
+                  album gallery (instead of a black page). Disabled by default, you can enable this behaviour below.
                 </Typography>
                 <Switch
                   value={autoDisplayAlbums}

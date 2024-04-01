@@ -29,11 +29,11 @@ export const MediaPlayers: FunctionComponent = () => {
 
   useEffect(() => {
     // if no player has been playing for 60 sec, redirect to /albums
-    if ((albumsOnTimeout && selectedMediaPlayer?.state === "stopped") || selectedMediaPlayer?.state === "unknown") {
+    if (albumsOnTimeout && (selectedMediaPlayer?.state === "stopped" || selectedMediaPlayer?.state === "unknown")) {
       setShowAlbumTimeout(
         setTimeout(() => {
           setLocation("/albums");
-        }, 5000),
+        }, 30000),
       );
     } else {
       if (showAlbumTimeout) {
@@ -47,7 +47,7 @@ export const MediaPlayers: FunctionComponent = () => {
         clearTimeout(showAlbumTimeout);
       }
     };
-  }, [selectedMediaPlayer?.state]);
+  }, [selectedMediaPlayer?.state, albumsOnTimeout]);
 
   const customRenderItem = (
     item: any,
