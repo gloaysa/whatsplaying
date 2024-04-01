@@ -5,16 +5,26 @@ import { MediaPlayers } from "./views/MediaPlayers";
 import MusicLibrary from "./views/MusicLibrary";
 import { Configuration } from "./views/Configuration";
 import { Notification } from "./components/Notification";
+import { useEffect } from "react";
+import { Spinner } from "./components/Spinner.tsx";
 
 function App() {
-  const {
-    configuration: { plexToken },
-  } = useUserStore((state) => state);
+  const { configuration, loadConfig } = useUserStore((state) => state);
 
   const [, setLocation] = useLocation();
 
-  if (!plexToken) {
-    setLocation("/config");
+  useEffect(() => {
+    if (!configuration.loaded) {
+      loadConfig().then((config) => {
+        if (!config.plexToken) {
+          setLocation("/config");
+        }
+      });
+    }
+  }, [configuration.loaded, loadConfig, setLocation]);
+
+  if (!configuration.loaded) {
+    return <Spinner open />;
   }
 
   return (

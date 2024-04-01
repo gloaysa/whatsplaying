@@ -1,11 +1,6 @@
 import { BaseMediaPlayerServer } from "./server.interface";
 
 export type MediaPlayerState = {
-  configuration: {
-    devicesOrder: string[];
-    plexToken: string;
-    albumsOnTimeout: boolean;
-  };
   error: string[];
   removeError: (index: number) => void;
   mediaPlayers: MediaPlayer[];

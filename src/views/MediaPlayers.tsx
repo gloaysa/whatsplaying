@@ -2,7 +2,7 @@ import { FunctionComponent, ReactNode, useEffect, useState } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import { MediaDisplay } from "../components/MediaDisplay";
-import { useMediaPlayerStore } from "../store/store";
+import { useMediaPlayerStore, useUserStore } from "../store/store";
 import { Spinner } from "../components/Spinner";
 import { useLocation } from "wouter";
 
@@ -12,12 +12,10 @@ import { useLocation } from "wouter";
  * Takes the whole available width and height.
  */
 export const MediaPlayers: FunctionComponent = () => {
+  const { mediaPlayers, getMediaPlayers, selectedMediaPlayer } = useMediaPlayerStore((state) => state);
   const {
-    mediaPlayers,
-    getMediaPlayers,
-    configuration: { plexToken, albumsOnTimeout },
-    selectedMediaPlayer,
-  } = useMediaPlayerStore((state) => state);
+    configuration: { plexToken, autoDisplayAlbums },
+  } = useUserStore((state) => state);
   const [, setLocation] = useLocation();
   const [showAlbumTimeout, setShowAlbumTimeout] = useState<NodeJS.Timeout | undefined>();
 
@@ -29,7 +27,7 @@ export const MediaPlayers: FunctionComponent = () => {
 
   useEffect(() => {
     // if no player has been playing for 60 sec, redirect to /albums
-    if (albumsOnTimeout && (selectedMediaPlayer?.state === "stopped" || selectedMediaPlayer?.state === "unknown")) {
+    if (autoDisplayAlbums && (selectedMediaPlayer?.state === "stopped" || selectedMediaPlayer?.state === "unknown")) {
       setShowAlbumTimeout(
         setTimeout(() => {
           setLocation("/albums");
@@ -47,7 +45,7 @@ export const MediaPlayers: FunctionComponent = () => {
         clearTimeout(showAlbumTimeout);
       }
     };
-  }, [selectedMediaPlayer?.state, albumsOnTimeout]);
+  }, [selectedMediaPlayer?.state, autoDisplayAlbums]);
 
   const customRenderItem = (
     item: any,

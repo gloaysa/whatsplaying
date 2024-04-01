@@ -4,15 +4,14 @@ import { ArrowBack } from "@mui/icons-material";
 import { Carousel } from "react-responsive-carousel";
 import { AlbumCover } from "../components/AlbumCover";
 import { useLocation } from "wouter";
-import { useLibraryStore, useMediaPlayerStore } from "../store/store";
+import { useLibraryStore, useMediaPlayerStore, useUserStore } from "../store/store";
 import { Spinner } from "../components/Spinner";
 
 const MusicLibrary: React.FC = () => {
+  const { library, getLibrary } = useLibraryStore((state) => state);
   const {
-    library,
-    getLibrary,
     configuration: { plexToken, intervalBetweenAlbums },
-  } = useLibraryStore((state) => state);
+  } = useUserStore((state) => state);
   const { selectedMediaPlayer } = useMediaPlayerStore((state) => state);
   const [, setLocation] = useLocation();
 

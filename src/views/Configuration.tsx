@@ -1,5 +1,6 @@
 import React, { FormEvent, FunctionComponent, useEffect, useState } from "react";
 import { Box, Button, Card, CardContent, Grid, InputAdornment, Switch, TextField, Typography } from "@mui/material";
+import { saveConfig } from "../store/utils/fetchConfig.ts";
 
 export const Configuration: FunctionComponent = () => {
   const [plexToken, setPlexToken] = useState("");
@@ -26,12 +27,17 @@ export const Configuration: FunctionComponent = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     //
     event.preventDefault();
-    localStorage.setItem("plexToken", plexToken.trimStart().trimEnd());
-    localStorage.setItem("hideLibraries", hideLibraries.join(","));
-    localStorage.setItem("preferredOrder", preferredOrder.join(","));
-    localStorage.setItem("autoDisplayAlbums", autoDisplayAlbums.toString());
-    localStorage.setItem("intervalBetweenAlbums", intervalBetweenAlbums.toString());
-    window.location.assign("/");
+    const config = {
+      plexToken: plexToken.trimStart().trimEnd(),
+      hideLibraries: hideLibraries,
+      preferredOrder: preferredOrder,
+      autoDisplayAlbums: autoDisplayAlbums,
+      intervalBetweenAlbums: intervalBetweenAlbums,
+      loaded: false,
+    };
+    saveConfig(config).then(() => {
+      window.location.assign("/");
+    });
   };
 
   const handleAddField = (setter: React.Dispatch<React.SetStateAction<string[]>>, fields: string[]) => {

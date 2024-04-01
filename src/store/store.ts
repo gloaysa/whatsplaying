@@ -6,22 +6,14 @@ import { getMediaPlayers, getUser } from "./server";
 import { getLibrary } from "./library";
 import { LibraryState } from "./library.interface";
 import { devtools } from "zustand/middleware";
-
-const config = {
-  PREFERRED_ORDER: localStorage.getItem("preferredOrder")?.split(",") ?? [],
-  HIDE_LIBRARIES: localStorage.getItem("hideLibraries")?.split(",") ?? [],
-  PLEX_TOKEN: localStorage.getItem("plexToken") ?? "",
-  ALBUMS_ON_TIMEOUT: localStorage.getItem("autoDisplayAlbums") === "true",
-  INTERVAL_BETWEEN_ALBUMS: Number(localStorage.getItem("intervalBetweenAlbums") ?? 30),
-};
+import { IConfig, loadConfig } from "./utils/fetchConfig.ts";
 
 interface UserStoreState {
   users: number;
   user: PlexUser | undefined;
   getUser: () => Promise<void>;
-  configuration: {
-    plexToken: string;
-  };
+  loadConfig: () => Promise<IConfig>;
+  configuration: IConfig;
   errors: {
     code: number;
     message: string;
@@ -42,42 +34,42 @@ export const useUserStore = create<UserStoreState>(
         }
         set({ user });
       },
+      loadConfig: async () => {
+        const configuration = await loadConfig();
+        set({ configuration });
+        return configuration;
+      },
       configuration: {
-        plexToken: config.PLEX_TOKEN ?? "",
+        preferredOrder: [],
+        hideLibraries: [],
+        plexToken: "",
+        autoDisplayAlbums: false,
+        intervalBetweenAlbums: 30,
+        loaded: false,
       },
     }),
     { name: "UserStore" },
-  ) as any,
+  ) as never,
 );
 
 let commandId = 0;
 
 export const useLibraryStore = create<LibraryState>(
   devtools(
-    (set, get: () => LibraryState) => ({
-      configuration: {
-        librariesToHide: config.HIDE_LIBRARIES.map((device: string) => device.trim().toLowerCase()) ?? [],
-        plexToken: config.PLEX_TOKEN,
-        intervalBetweenAlbums: config.INTERVAL_BETWEEN_ALBUMS,
-      },
+    (set) => ({
       library: [],
       getLibrary: async (player: MediaPlayer) => {
-        const library = await getLibrary(player, get().configuration.librariesToHide);
+        const library = await getLibrary(player, useUserStore.getState().configuration.hideLibraries);
         set({ library });
       },
       // ... other methods
     }),
     { name: "LibraryStore" },
-  ) as any,
+  ) as never,
 );
 export const useMediaPlayerStore = create<MediaPlayerState>(
   devtools(
     (set, get: () => MediaPlayerState) => ({
-      configuration: {
-        devicesOrder: config.PREFERRED_ORDER.map((device: string) => device.trim().toLowerCase()) ?? [],
-        plexToken: config.PLEX_TOKEN,
-        albumsOnTimeout: config.ALBUMS_ON_TIMEOUT,
-      },
       error: [],
       removeError: (index: number) => {
         const error = get().error.filter((_, i) => i !== index);
@@ -90,7 +82,7 @@ export const useMediaPlayerStore = create<MediaPlayerState>(
       },
       getMediaPlayers: async () => {
         try {
-          const mediaPlayers = await getMediaPlayers(get().configuration.plexToken);
+          const mediaPlayers = await getMediaPlayers(useUserStore.getState().configuration.plexToken);
           set({ mediaPlayers });
         } catch (e: unknown) {
           if (e instanceof Error) {
@@ -121,7 +113,7 @@ export const useMediaPlayerStore = create<MediaPlayerState>(
       },
       update: async (player: MediaPlayer): Promise<void> => {
         try {
-          const devicesOrder = get().configuration.devicesOrder;
+          const devicesOrder = useUserStore.getState().configuration.preferredOrder;
           const updated = await updateMediaPlayer(player, commandId);
           if (updated.clientIdentifier === get().selectedMediaPlayer?.clientIdentifier) {
             set({ selectedMediaPlayer: updated });
@@ -235,5 +227,5 @@ export const useMediaPlayerStore = create<MediaPlayerState>(
       // ... other methods
     }),
     { name: "MediaPlayerStore" },
-  ) as any,
+  ) as never,
 );

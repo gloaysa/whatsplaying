@@ -30,27 +30,6 @@ The carousel auto-plays, changing slides every few seconds. The albums are chose
 - **Works with your Sonos devices**: If you start a playlist or album on a Sonos device, **What's Playing** will automatically switch to that device and display the album art.
 - **Blur Background**: The background of page is blurred with the main colors of the currently playing album.
 
-## Configurations
-
-**What's Playing** can be customized to suit your needs by setting configurations.
-The first time you run the application, you will be prompted to enter your Plex token and other configurations.
-
-- `PLEX_TOKEN`: MANDATORY. This is your Plex token. It's used to authenticate with your Plex server. 
-You can find it by following this [guide](https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/).
-
-- `HIDE_LIBRARY`: OPTIONAL. This is a comma-separated list of library sections you want to hide.
-For example, if you have libraries named "Music" and "Podcasts" and you want to hide the "Podcasts" library.
-
-- `PREFER_ORDER`: OPTIONAL. This is a comma-separated list of device names in the order you prefer them to be displayed.
-For example, if you have devices named "Living Room", "Bedroom", and "Kitchen" and you want them to be displayed in that order,
-If none of them are playing, but you have another device playing,
-the currently playing will be displayed by default. As soon as any of your favorite devices start playing, it will be displayed instead.
-
-- `AUTO_START_ALBUM_LIBRARY`: OPTIONAL. This is a boolean value that determines if the Album Library should start
-- automatically if your media players are stopped/unreachable for 5 seconds. Defaults to false.
-
-Once you have set the configuration, if you ever want to change it again, navigate to `/config` in your browser.
-
 ## Screenshots
 
 Player with blurred background:
@@ -64,6 +43,41 @@ Displaying lyrics:
 
 Displaying controls (mouse hovering over the album art or touching the screen):
 ![What's Playing](./example_controls.png)
+
+## Configurations
+
+**What's Playing** can be customized to suit your needs by setting configurations.
+The first time you run the application, you will be prompted to enter your Plex token and other configurations.
+
+- `plexToken`: MANDATORY. This is your Plex token. It's used to authenticate with your Plex server. 
+You can find it by following this [guide](https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/).
+
+- `hideLibraries`: OPTIONAL. This is a comma-separated list of library sections you want to hide.
+For example, if you have libraries named "Music" and "Podcasts" and you want to hide the "Podcasts" library.
+
+- `preferredOrder`: OPTIONAL. This is a comma-separated list of device names in the order you prefer them to be displayed.
+For example, if you have devices named "Living Room", "Bedroom", and "Kitchen" and you want them to be displayed in that order,
+If none of them are playing, but you have another device playing,
+the currently playing will be displayed by default. As soon as any of your favorite devices start playing, it will be displayed instead.
+
+- `autoDisplayAlbums`: OPTIONAL. This is a boolean value that determines if the Album Library should start 
+automatically if your media players are stopped/unreachable for 30 seconds. Defaults to false.
+
+- `intervalBetweenAlbums`: OPTIONAL. This is the time in seconds between slides in the Album Library. Defaults to 30 seconds.
+
+Once you have set the configuration, if you ever want to change it again, navigate to `/config` in your browser.
+
+You can optionally pass this configurations in a `config.json` file located in the root of the project. If you are using
+Docker, you can mount this file to `/app/config.json`.
+
+```bash
+docker run -v /path/to/config.json:/app/config.json -p 5000:5000 your-image-name
+```
+
+You will find an example down below if you are using docker-compose.
+
+The config file should look like [this](./public/config.json)
+
 
 ## Running with Docker Compose
 
@@ -83,6 +97,8 @@ services:
       - PORT=5000 # default is 5000
     ports:
       - '5000:5000'
+    volumes:
+      - ./path_to_your_file/config.json:/app/config.json # optional
 ```
 
 ## Roadmap
@@ -90,7 +106,7 @@ services:
 [] - Libraries are hardcoded (only the first one is shown).  
 [] - Display playlists.  
 [] - Add the ability to start albums/playlists.  
-[] - Display art from external services (tidal).  
+[x] - Display art from external services (tidal).  
 [x] - Allow configuration of Album library carousel time between slides.  
 [x] - Allow configuration to autostart Album library if nothing is playing for 5 seconds.  
 
