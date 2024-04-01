@@ -9,6 +9,11 @@ export interface BaseMediaPlayerServer {
  * PlexUser interface
  */
 export interface PlexUser {
+  errors: {
+    code: number;
+    message: string;
+    status: number;
+  }[];
   id: number;
   uuid: string;
   username: string;
@@ -80,7 +85,7 @@ export interface PlexResource {
   clientIdentifier: string;
   createdAt: string;
   lastSeenAt: string;
-  provides: "server" | "client;player;pubsub-player";
+  provides: string;
   ownerId: string | null;
   sourceTitle: string | null;
   publicAddress: string;

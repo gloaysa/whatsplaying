@@ -22,6 +22,11 @@ interface UserStoreState {
   configuration: {
     plexToken: string;
   };
+  errors: {
+    code: number;
+    message: string;
+    status: number;
+  }[];
 }
 
 export const useUserStore = create<UserStoreState>(
@@ -29,8 +34,12 @@ export const useUserStore = create<UserStoreState>(
     (set, get: () => UserStoreState) => ({
       users: 0,
       user: undefined,
+      errors: [],
       getUser: async () => {
         const user = await getUser(get().configuration.plexToken);
+        if (user.errors?.length) {
+          set({ errors: [...get().errors, user.errors[0]] });
+        }
         set({ user });
       },
       configuration: {
