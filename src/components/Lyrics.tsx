@@ -5,9 +5,10 @@ import { Lyrics, MediaPlayer } from "../store/media-player.type";
 interface LyricsDisplayProps {
   lyrics: Lyrics;
   mediaPlayer: MediaPlayer;
+  offset: number;
 }
 
-const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ lyrics, mediaPlayer }) => {
+const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ lyrics, mediaPlayer, offset }) => {
   const [currentLine, setCurrentLine] = useState("");
   const [previousLines, setPreviousLines] = useState<string[]>([]);
   const [upcomingLines, setUpcomingLines] = useState<string[]>([]);
@@ -44,7 +45,7 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ lyrics, mediaPlayer }) =>
   }, [lyrics]);
 
   useEffect(() => {
-    const currentTime = Number(mediaPlayer.time) + 1000;
+    const currentTime = Number(mediaPlayer.time) + offset;
     let currentIndex = lyrics.Line.findIndex(
       (line) => currentTime >= line.startOffset && currentTime <= line.endOffset,
     );

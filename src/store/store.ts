@@ -224,6 +224,11 @@ export const useMediaPlayerStore = create<MediaPlayerState>(
         set({ showLyrics: show });
       },
       showLyrics: localStorage.getItem("showLyrics") === "true",
+      setLyricsOffset: (offset: number) => {
+        localStorage.setItem("lyricsOffset", offset.toString());
+        set({ lyricsOffset: offset });
+      },
+      lyricsOffset: Number(localStorage.getItem("lyricsOffset")) || 1000,
       // ... other methods
     }),
     { name: "MediaPlayerStore" },

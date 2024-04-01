@@ -15,7 +15,8 @@ interface IMediaPlayerProps {
 }
 
 export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, isSelected }) => {
-  const { update, getLyrics, setSelectMediaPlayer, setShowLyrics, showLyrics } = useMediaPlayerStore((state) => state);
+  const { update, getLyrics, setSelectMediaPlayer, setShowLyrics, showLyrics, lyricsOffset, setLyricsOffset } =
+    useMediaPlayerStore((state) => state);
   useEffect(() => {}, [isSelected, plexamp, update]);
   const [lyrics, setLyrics] = useState<Lyrics | undefined>();
   const [isInteracting, setIsInteracting] = useState(false);
@@ -96,11 +97,19 @@ export const MediaDisplay: FunctionComponent<IMediaPlayerProps> = ({ plexamp, is
       onTouchMove={handleInteraction}
       style={{ height: "100vh", backgroundImage: backgroundGradient }}
     >
-      {lyrics && isSelected && showLyrics && <LyricsDisplay lyrics={lyrics} mediaPlayer={plexamp} />}
+      {lyrics && isSelected && showLyrics && (
+        <LyricsDisplay lyrics={lyrics} mediaPlayer={plexamp} offset={lyricsOffset} />
+      )}
       <AlbumCover mediaUrl={plexamp.metadata?.thumb} />
       {isInteracting && (
         <div className="legend">
-          <ExtraMediaControls showLyrics={() => setShowLyrics(!showLyrics)} showAlbums={() => setLocation("/albums")} />
+          <ExtraMediaControls
+            isLyricsVisible={showLyrics}
+            showLyrics={() => setShowLyrics(!showLyrics)}
+            showAlbums={() => setLocation("/albums")}
+            offset={lyricsOffset}
+            onOffsetChange={(off: number) => setLyricsOffset(off)}
+          />
           <MediaControls plexamp={plexamp} />
         </div>
       )}

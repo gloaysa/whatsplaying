@@ -19,6 +19,8 @@ export type MediaPlayerState = {
   getLyrics: (player: MediaPlayer) => Promise<Lyrics | undefined>;
   setShowLyrics: (show: boolean) => void;
   showLyrics: boolean;
+  setLyricsOffset: (offset: number) => void;
+  lyricsOffset: number;
   // ... other methods
 };
 
